@@ -1,0 +1,53 @@
+{
+  "name": "skilldev",
+  "version": "1.0.0",
+  "description": "skilldev",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "lint": "eslint src --ext .ts,.vue --fix",
+    "format": "prettier --write src/**/*.{ts,vue,css}",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asysoev-dev/skilldev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/asysoev-dev/skilldev/issues"
+  },
+  "homepage": "https://github.com/asysoev-dev/skilldev#readme",
+  "dependencies": {
+    "vue": "^3.5.33"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.3",
+    "@babel/preset-typescript": "^7.28.5",
+    "@tsconfig/node20": "^20.1.9",
+    "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "@vue/babel-plugin-jsx": "^2.0.1",
+    "@vue/compiler-sfc": "^3.5.33",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.9.0",
+    "html-webpack-plugin": "^5.6.7",
+    "prettier": "^3.8.3",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.7",
+    "typescript": "^6.0.3",
+    "vue-loader": "^17.4.2",
+    "webpack": "^5.106.2",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.3"
+  }
+}
