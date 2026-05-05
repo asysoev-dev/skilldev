@@ -31,9 +31,10 @@ jobs:
       - name: Build Docker image
         run: docker build -t skilldev:latest .
 
-      - name: Save Docker image to tar
+      - name: Save and set permissions
         run: |
           docker save skilldev:latest -o skilldev.tar
+          sudo chmod 666 skilldev.tar
           ls -la skilldev.tar
 
       - name: Copy image to VPS
@@ -44,7 +45,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "skilldev.tar"
           target: "~/"
-          debug: true
+          rm: true
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -53,7 +54,6 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            ls -la ~/skilldev.tar
             docker load -i ~/skilldev.tar
             docker stop skilldev || true
             docker rm skilldev || true
