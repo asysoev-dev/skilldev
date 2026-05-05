@@ -45,7 +45,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "skilldev.tar"
           target: "~/"
-          rm: true
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
