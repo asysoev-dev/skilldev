@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>Просто пустой проект</h1>
+        <h1>Просто пустой проект [DELOY TEST]</h1>
         <button @click="increment">Нажатий: {{ count }}</button>
     </div>
 </template>
