@@ -58,6 +58,7 @@ jobs:
             docker rm skilldev || true
             docker run -d \
               --name skilldev \
+              -p 80:80 \
               -p 443:443 \
               -v /opt/ssl:/etc/nginx/ssl:ro \
               --restart always \
