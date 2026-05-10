@@ -59,7 +59,7 @@ jobs:
             docker run -d \
               --name skilldev \
               -p 443:443 \
-              -v /etc/letsencrypt/live/myskilldev.ru:/etc/nginx/ssl:ro \
+              -v /opt/ssl:/etc/nginx/ssl:ro \
               --restart always \
               skilldev:latest
             docker image prune -f
