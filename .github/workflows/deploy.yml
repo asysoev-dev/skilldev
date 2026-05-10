@@ -56,6 +56,11 @@ jobs:
             docker load -i ~/skilldev.tar
             docker stop skilldev || true
             docker rm skilldev || true
-            docker run -d --name skilldev -p 3005:80 --restart always skilldev:latest
+            docker run -d \
+              --name skilldev \
+              -p 443:443 \
+              -v /etc/letsencrypt/live/myskilldev.ru:/etc/nginx/ssl:ro \
+              --restart always \
+              skilldev:latest
             docker image prune -f
             rm -f ~/skilldev.tar
