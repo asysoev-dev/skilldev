@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = (env, argv) => {
@@ -44,6 +45,11 @@ module.exports = (env, argv) => {
             new HtmlWebpackPlugin({
                 template: './public/index.html',
                 title: 'SkillDev'
+            }),
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: 'public/favicon.ico', to: 'favicon.ico' }
+                ]
             })
         ],
         devServer: {
