@@ -11,8 +11,8 @@ module.exports = (env, argv) => {
     return {
         mode: isDevelopment ? 'development' : 'production',
 
-        // entry: './src/app/main.ts',
-        entry: './src/main.ts',
+        entry: './src/app/main.ts',
+        // entry: './src/main.ts',
 
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -25,12 +25,12 @@ module.exports = (env, argv) => {
             extensions: ['.ts', '.js', '.vue', '.json'],
             alias: {
                 '@': path.resolve(__dirname, 'src'),
-                // '@app': path.resolve(__dirname, 'src/app'),
-                // '@pages': path.resolve(__dirname, 'src/pages'),
-                // '@features': path.resolve(__dirname, 'src/features'),
-                // '@widgets': path.resolve(__dirname, 'src/widgets'),
-                // '@entities': path.resolve(__dirname, 'src/entities'),
-                // '@shared': path.resolve(__dirname, 'src/shared'),
+                '@app': path.resolve(__dirname, 'src/app'),
+                '@pages': path.resolve(__dirname, 'src/pages'),
+                '@features': path.resolve(__dirname, 'src/features'),
+                '@widgets': path.resolve(__dirname, 'src/widgets'),
+                '@entities': path.resolve(__dirname, 'src/entities'),
+                '@shared': path.resolve(__dirname, 'src/shared'),
             },
         },
 
@@ -69,8 +69,8 @@ module.exports = (env, argv) => {
             new webpack.DefinePlugin({
                 __VUE_OPTIONS_API__: JSON.stringify(true),
                 __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
-            })
+                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+            }),
         ],
 
         devServer: {

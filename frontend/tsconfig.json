@@ -5,16 +5,22 @@
         "moduleResolution": "bundler",
         "strict": true,
         "jsx": "preserve",
-        "jsxImportSource": "vue",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
+        "sourceMap": true,
         "resolveJsonModule": true,
+        "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        // "ignoreDeprecations": "5.0",
+        // "baseUrl": ".",
         "paths": {
-            "@/*": ["./src/*"]
-        },
-        "types": ["node"]
+            "@/*": ["./src/*"],
+            "@app/*": ["./src/app/*"],
+            "@pages/*": ["./src/pages/*"],
+            "@features/*": ["./src/features/*"],
+            "@widgets/*": ["./src/widgets/*"],
+            "@entities/*": ["./src/entities/*"],
+            "@shared/*": ["./src/shared/*"]
+        }
     },
     "include": ["src/**/*.ts", "src/**/*.vue"],
     "exclude": ["node_modules", "dist"]

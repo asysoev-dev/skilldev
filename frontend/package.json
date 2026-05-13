@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/asysoev-dev/skilldev#readme",
   "dependencies": {
-    "vue": "^3.5.33"
+    "pinia": "^3.0.4",
+    "vue": "^3.5.33",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
