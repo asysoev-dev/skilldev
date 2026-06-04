@@ -9,6 +9,9 @@ dist/
 *.env
 !.env.example
 
+prisma/.env
+!prisma/.env.example
+
 .cache
 Docker
 skilldev.tar
