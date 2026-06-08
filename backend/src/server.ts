@@ -30,10 +30,6 @@ const limiter = rateLimit(RATE_LIMIT_OPTIONS);
 app.use("/api/", limiter);
 app.use("/api/auth", authRoutes);
 
-app.get("/test", (req, res) => {
-  res.json({ status: "ok" });
-});
-
 app.use(
   (
     err: any,

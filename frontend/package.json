@@ -4,9 +4,9 @@
   "description": "skilldev",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack serve --config webpack.config.js --mode development",
-    "build": "webpack --config webpack.config.js --mode production",
-    "build:dev": "webpack --config webpack.config.js --mode development",
+    "dev": "webpack serve --config webpack/webpack.dev.js",
+    "build": "webpack --config webpack/webpack.prod.js",
+    "build:dev": "webpack --config webpack/webpack.dev.js",
     "lint": "eslint src --ext .ts,.vue",
     "format": "prettier --write src"
   },
@@ -53,6 +53,7 @@
     "vue-loader": "^17.4.2",
     "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^5.2.3",
+    "webpack-merge": "^6.0.1"
   }
 }
