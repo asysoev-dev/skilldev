@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "../server";
 import {
+  REFRESH_TOKEN_EXPIRY,
   generateAccessToken,
   generateRefreshToken,
   verifyAccessToken,
@@ -88,14 +89,20 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    await prisma.session.deleteMany({
+      where: { userId: user.id },
+    });
+
     const accessToken = generateAccessToken(user.id, user.email);
     const refreshToken = generateRefreshToken(user.id);
+
+    const expiresInSeconds = +REFRESH_TOKEN_EXPIRY;
 
     await prisma.session.create({
       data: {
         userId: user.id,
         refreshToken,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        expiresAt: new Date(Date.now() + expiresInSeconds * 1000),
       },
     });
 
@@ -103,7 +110,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: expiresInSeconds * 1000,
     });
 
     res.json({
@@ -161,7 +168,10 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (!session || session.expiresAt < new Date()) {
-      res.status(403).json({ error: "Invalid or expired refresh token" });
+      if (session) {
+        await prisma.session.delete({ where: { id: session.id } });
+      }
+      res.status(401).json({ error: "Invalid or expired refresh token" });
       return;
     }
 
@@ -173,7 +183,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     res.json({ accessToken: newAccessToken });
     return;
   } catch (error) {
-    res.status(403).json({ error: "Invalid refresh token" });
+    res.status(401).json({ error: "Invalid refresh token" });
     return;
   }
 };
@@ -197,7 +207,7 @@ export const me = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const decoded = verifyAccessToken(token) as any;
+    const decoded = verifyAccessToken(token);
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: { id: true, email: true, name: true, createdAt: true },

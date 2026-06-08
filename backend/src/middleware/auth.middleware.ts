@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "../utils/jwt";
+import { verifyAccessToken, TokenPayload } from "../utils/jwt";
 
 export interface AuthRequest extends Request {
-  user?: { userId: number; email: string };
+  user?: TokenPayload;
 }
 
 /**
@@ -28,11 +28,11 @@ export const authMiddleware = (
   }
 
   try {
-    const decoded = verifyAccessToken(token) as any;
-    req.user = { userId: decoded.userId, email: decoded.email };
+    const decoded = verifyAccessToken(token);
+    req.user = decoded;
     next();
   } catch (error) {
-    res.status(403).json({ error: "Invalid or expired token" });
+    res.status(401).json({ error: "Invalid or expired token" });
     return;
   }
 };
