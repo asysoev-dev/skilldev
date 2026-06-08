@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create .env file for backend (from secrets)
+      - name: Create .env file for backend
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
@@ -22,13 +22,14 @@ jobs:
           echo "ACCESS_TOKEN_EXPIRY=${{ secrets.ACCESS_TOKEN_EXPIRY }}" >> .env
           echo "REFRESH_TOKEN_EXPIRY=${{ secrets.REFRESH_TOKEN_EXPIRY }}" >> .env
           echo "NODE_ENV=production" >> .env
+          echo "DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}" >> .env
 
       - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
           source: ".,!node_modules,!frontend/node_modules,!backend/node_modules,!frontend/dist,!backend/dist"
           target: "/root/skilldev"
 
@@ -36,12 +37,10 @@ jobs:
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /root/skilldev
-            # Загружаем переменные окружения
-            export $(cat .env | xargs)
             docker compose -f docker-compose.prod.yml down
             docker compose -f docker-compose.prod.yml build --no-cache
             docker compose -f docker-compose.prod.yml up -d
