@@ -2,8 +2,7 @@ name: Deploy to VPS
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   deploy:
@@ -11,57 +10,39 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker image
-        run: docker build -t skilldev:latest .
-
-      - name: Save and set permissions
+      - name: Create .env file for backend (from secrets)
         run: |
-          docker save skilldev:latest -o skilldev.tar
-          sudo chmod 666 skilldev.tar
-          ls -la skilldev.tar
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}" >> .env
+          echo "ACCESS_TOKEN_EXPIRY=${{ secrets.ACCESS_TOKEN_EXPIRY }}" >> .env
+          echo "REFRESH_TOKEN_EXPIRY=${{ secrets.REFRESH_TOKEN_EXPIRY }}" >> .env
+          echo "NODE_ENV=production" >> .env
 
-      - name: Copy image to VPS
-        uses: appleboy/scp-action@v0.1.7
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: "skilldev.tar"
-          target: "~/"
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: ".,!node_modules,!frontend/node_modules,!backend/node_modules,!frontend/dist,!backend/dist"
+          target: "/root/skilldev"
 
       - name: Deploy on VPS
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker load -i ~/skilldev.tar
-            docker stop skilldev || true
-            docker rm skilldev || true
-            docker run -d \
-              --name skilldev \
-              -p 80:80 \
-              -p 443:443 \
-              -v /opt/ssl:/etc/nginx/ssl:ro \
-              --restart always \
-              skilldev:latest
-            docker image prune -f
-            rm -f ~/skilldev.tar
+            cd /root/skilldev
+            # Загружаем переменные окружения
+            export $(cat .env | xargs)
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml build --no-cache
+            docker compose -f docker-compose.prod.yml up -d
+            docker system prune -f

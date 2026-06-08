@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: skilldev-postgres-prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - skilldev-network
+
+  backend:
+    build: ./backend
+    container_name: skilldev-backend-prod
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY}
+      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY}
+      NODE_ENV: production
+      PORT: 3001
+      FRONTEND_URL: https://myskilldev.ru
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    networks:
+      - skilldev-network
+
+  frontend:
+    build: ./frontend
+    container_name: skilldev-frontend-prod
+    ports:
+      - "3005:80"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - skilldev-network
+
+volumes:
+  postgres_data:
+
+networks:
+  skilldev-network:
+    driver: bridge
