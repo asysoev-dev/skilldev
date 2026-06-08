@@ -1,3 +1,4 @@
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -57,6 +58,10 @@ module.exports = (env, argv) => {
         },
 
         plugins: [
+            new Dotenv({
+                path: isDevelopment ? '../.env.dev' : '../.env.prod',
+                systemvars: true,
+            }),
             new VueLoaderPlugin(),
             new HtmlWebpackPlugin({
                 template: './public/index.html',
