@@ -1,16 +1,25 @@
 <template>
     <div class="dashboard-page">
         <h1>Dashboard</h1>
-        <p>Welcome, {{ userName }}!</p>
+        <p>Welcome, {{ userStore.user?.name || userStore.user?.email }}!</p>
+
+        <button @click="authApi.getMe">GetMe</button>
+        <button @click="logout">LogOut</button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useUserStore } from '@entities/user';
+import { onMounted } from 'vue';
+import { useUserStore } from '@/entities/user';
+import { useAuth } from '@/features/auth/model/useAuth';
+import { authApi } from '@shared/api/auth.api';
 
 const userStore = useUserStore();
-const userName = computed(() => userStore.user?.name || 'User');
+const { logout, checkAuth } = useAuth();
+
+onMounted(async () => {
+    await checkAuth();
+});
 </script>
 
 <style scoped>
