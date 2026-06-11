@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Build backend
         run: |
@@ -29,7 +29,7 @@ jobs:
           npm ci
           npm run build
 
-      - name: Create .env file for backend
+      - name: Create .env file
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: ".,!node_modules,!frontend/node_modules,!backend/node_modules"
-          target: "/root/skilldev"
+          target: "/root/skilldev_new"
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -57,8 +57,12 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /root/skilldev
+            cd /root/skilldev_new
             docker compose -f docker-compose.prod.yml down
             docker compose -f docker-compose.prod.yml build --no-cache
             docker compose -f docker-compose.prod.yml up -d
             docker system prune -f
+            cd /root
+            rm -rf /root/skilldev_old
+            mv /root/skilldev /root/skilldev_old 2>/dev/null || true
+            mv /root/skilldev_new /root/skilldev
