@@ -21,7 +21,7 @@ interface QueueItem {
     config: RetryableConfig;
 }
 
-const API_BASE_URL = process.env.VUE_API_URL;
+const API_BASE_URL = process.env.VUE_API_URL as string;
 
 export const apiClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -86,7 +86,7 @@ apiClient.interceptors.response.use(
 
         if (originalRequest.url?.includes('/auth/refresh')) {
             await logoutAndRedirect();
-            return Promise.reject(error);
+            return;
         }
 
         if (isRefreshing) {
@@ -116,6 +116,8 @@ apiClient.interceptors.response.use(
             await processQueue(axiosError, null);
 
             await logoutAndRedirect();
+
+            return;
         } finally {
             isRefreshing = false;
         }

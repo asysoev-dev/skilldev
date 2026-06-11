@@ -27,7 +27,7 @@ module.exports = merge(baseConfig, {
     },
     plugins: [
         new Dotenv({
-            path: path.resolve(__dirname, '../../.env.dev'), // ✅ локальный файл
+            path: path.resolve(__dirname, '../../.env.dev'),
             systemvars: true,
         }),
     ],

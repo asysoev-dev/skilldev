@@ -11,17 +11,12 @@ services:
     restart: always
     networks:
       - skilldev-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   backend:
     build: ./backend
     container_name: skilldev-backend-prod
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY}
@@ -30,8 +25,7 @@ services:
       PORT: 3001
       FRONTEND_URL: https://myskilldev.ru
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     restart: always
     networks:
       - skilldev-network
@@ -40,7 +34,11 @@ services:
     build: ./frontend
     container_name: skilldev-frontend-prod
     ports:
-      - "3005:80"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/myskilldev.ru/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - /etc/letsencrypt/live/myskilldev.ru/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
     depends_on:
       - backend
     restart: always

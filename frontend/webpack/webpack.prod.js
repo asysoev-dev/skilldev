@@ -1,5 +1,6 @@
 const { merge } = require('webpack-merge');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const baseConfig = require('./webpack.base');
 
 module.exports = merge(baseConfig, {
@@ -12,6 +13,12 @@ module.exports = merge(baseConfig, {
         publicPath: '/',
     },
     devtool: 'source-map',
+    plugins: [
+        new Dotenv({
+            path: path.resolve(__dirname, '../../.env.dev'),
+            systemvars: true,
+        }),
+    ],
     optimization: {
         splitChunks: {
             chunks: 'all',
