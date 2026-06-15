@@ -1,8 +1,7 @@
+import './preload';
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
-import path from "path";
 import rateLimit from "express-rate-limit";
 import { PrismaClient } from "@prisma/client";
 
@@ -10,10 +9,6 @@ import { logger } from "./utils/logger";
 import { CORS_OPTIONS, RATE_LIMIT_OPTIONS } from "./utils/constants";
 
 import authRoutes from "./routes/auth.routes";
-
-dotenv.config({
-  path: path.resolve(__dirname, "../../.env.dev"),
-});
 
 export const prisma = new PrismaClient();
 

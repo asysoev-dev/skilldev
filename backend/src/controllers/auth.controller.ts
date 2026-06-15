@@ -5,8 +5,7 @@ import {
   REFRESH_TOKEN_EXPIRY,
   generateAccessToken,
   generateRefreshToken,
-  verifyAccessToken,
-  //   verifyRefreshToken,
+  verifyAccessToken
 } from "../utils/jwt";
 
 /**
