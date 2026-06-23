@@ -23,35 +23,37 @@ async function loadRenderer() {
     }
 }
 
-const template = (html, state) => `
-  <!DOCTYPE html>
-  <html lang="ru">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillDev - Frontend Developer Portfolio</title>
-    <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/main.css">
-  </head>
-  <body>
-    <div id="app">${html}</div>
-    <script>window.__INITIAL_STATE__ = ${state}</script>
-    <script src="/client.js"></script>
-  </body>
-  </html>
-`;
+const getCssFile = () => {
+    const cssDir = path.resolve(__dirname, 'dist/css');
+    if (!fs.existsSync(cssDir)) return '/css/main.css';
+
+    const files = fs.readdirSync(cssDir);
+    const mainCss = files.find((f) => f.startsWith('main.') && f.endsWith('.css'));
+    return mainCss ? `/css/${mainCss}` : '/css/main.css';
+};
+
+const template = (html, state) => {
+    const cssPath = getCssFile();
+    return `
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="icon" href="/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SkillDev - Frontend Developer Portfolio</title>
+        <link rel="stylesheet" href="${cssPath}">
+    </head>
+    <body>
+        <div id="app">${html}</div>
+        <script>window.__INITIAL_STATE__ = ${state}</script>
+        <script src="/client.js"></script>
+    </body>
+    </html>
+    `;
+};
 
 loadRenderer().then(() => {
-    const cssPath = path.resolve(__dirname, 'dist/css');
-    if (fs.existsSync(cssPath)) {
-        app.use('/css', express.static(cssPath));
-        console.log('CSS served from:', cssPath);
-    } else {
-        console.warn('CSS directory not found');
-    }
-
-    app.use(express.static(path.resolve(__dirname, 'dist')));
-
     app.get('/', async (req, res) => {
         if (!renderer) {
             const indexHtml = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf-8');
@@ -67,6 +69,13 @@ loadRenderer().then(() => {
             res.status(500).send('Server Error');
         }
     });
+
+    const cssPath = path.resolve(__dirname, 'dist/css');
+    if (fs.existsSync(cssPath)) {
+        app.use('/css', express.static(cssPath));
+    }
+
+    app.use(express.static(path.resolve(__dirname, 'dist')));
 
     app.use((req, res) => {
         const indexHtml = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf-8');
