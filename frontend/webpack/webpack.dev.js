@@ -5,7 +5,7 @@ const baseConfig = require('./webpack.base');
 
 module.exports = merge(baseConfig, {
     mode: 'development',
-    entry: './src/app/main.ts',
+    entry: './src/app/entry-client.ts',
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].js',

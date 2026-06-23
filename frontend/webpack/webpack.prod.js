@@ -1,3 +1,4 @@
+// на данный момент нигде не используется, оставлен для возможности запукать в SPA через npm run build:spa
 const { merge } = require('webpack-merge');
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
@@ -5,7 +6,7 @@ const baseConfig = require('./webpack.base');
 
 module.exports = merge(baseConfig, {
     mode: 'production',
-    entry: './src/app/main.ts',
+    entry: './src/app/entry-client.ts',
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].[contenthash].js',
