@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useUserStore } from '@/entities/user';
-import { useAuth } from '@/features/auth/model/useAuth';
+import { useUserStore } from '@entities/user';
+import { useAuth } from '@features/auth/model/useAuth';
 import { authApi } from '@shared/api/auth.api';
 
 const userStore = useUserStore();

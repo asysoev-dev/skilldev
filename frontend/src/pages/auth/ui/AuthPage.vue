@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import { useAuth } from '@/features/auth/model/useAuth';
+import { useAuth } from '@features/auth/model/useAuth';
 
 const { login, register, isLoading, error } = useAuth();
 const isLoginMode = ref(true);

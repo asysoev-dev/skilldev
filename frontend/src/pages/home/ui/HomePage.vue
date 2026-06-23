@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>Просто пустой проект [DELOY TEST 6]</h1>
+        <h1>Просто пустой проект [DELOY TEST 7]</h1>
         <button @click="increment">Нажатий: {{ count }}</button>
         <!-- <p v-if="serverTime">Server time: {{ serverTime }}</p> -->
     </div>

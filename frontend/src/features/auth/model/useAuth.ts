@@ -1,8 +1,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/entities/user';
-import { authApi } from '@/shared/api/auth.api';
-import type { LoginCredentials, RegisterData } from '@/shared/api/auth.api';
+import { useUserStore } from '@entities/user';
+import { authApi } from '@shared/api/auth.api';
+import type { LoginCredentials, RegisterData } from '@shared/api/auth.api';
 
 interface ApiError {
     response?: {
