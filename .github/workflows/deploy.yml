@@ -27,7 +27,8 @@ jobs:
         run: |
           cd frontend
           npm ci
-          npm run build
+          npm run build:client
+          npm run build:server
         env:
           VUE_API_URL: ${{ secrets.VUE_API_URL }}
 
@@ -43,6 +44,9 @@ jobs:
           echo "NODE_ENV=production" >> .env
           echo "DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}" >> .env
           echo "VUE_API_URL=${{ secrets.VUE_API_URL }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "SSR_PORT=${{ secrets.SSR_PORT }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
 
       - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.7
@@ -62,7 +66,7 @@ jobs:
           script: |
             cd /root/skilldev
             docker compose -f docker-compose.prod.yml down
-            docker rmi skilldev-backend skilldev-frontend 2>/dev/null || true
+            docker rmi skilldev-backend skilldev-frontend skilldev-frontend-ssr 2>/dev/null || true
             docker compose -f docker-compose.prod.yml build --no-cache
             docker compose -f docker-compose.prod.yml up -d
             docker system prune -f

@@ -24,8 +24,8 @@ services:
       ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY}
       REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY}
       NODE_ENV: production
-      PORT: 3001
-      FRONTEND_URL: https://myskilldev.ru
+      PORT: ${PORT:-3001}
+      FRONTEND_URL: ${FRONTEND_URL}
     depends_on:
       - postgres
     restart: always
@@ -33,7 +33,9 @@ services:
       - skilldev-network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: skilldev-frontend-prod
     ports:
       - "80:80"
@@ -41,6 +43,23 @@ services:
     volumes:
       - /etc/letsencrypt/live/myskilldev.ru/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
       - /etc/letsencrypt/live/myskilldev.ru/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - skilldev-network
+
+  frontend-ssr:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.ssr
+    container_name: skilldev-frontend-ssr
+    command: node server.js
+    ports:
+      - "${SSR_PORT:-3000}:3000"
+    environment:
+      SSR_PORT: ${SSR_PORT:-3000}
+      VUE_API_URL: ${VUE_API_URL}
     depends_on:
       - backend
     restart: always
