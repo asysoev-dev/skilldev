@@ -2,7 +2,7 @@
     <div class="container">
         <h1>Просто пустой проект [DELOY TEST 6]</h1>
         <button @click="increment">Нажатий: {{ count }}</button>
-        <p v-if="serverTime">Server time: {{ serverTime }}</p>
+        <!-- <p v-if="serverTime">Server time: {{ serverTime }}</p> -->
     </div>
 </template>
 
@@ -12,13 +12,13 @@ import { ref, onMounted, onServerPrefetch } from 'vue';
 const serverTime = ref('');
 
 onServerPrefetch(async () => {
-    serverTime.value = new Date().toISOString();
+    // serverTime.value = new Date().toISOString();
 });
 
 onMounted(() => {
-    if (!serverTime.value) {
-        serverTime.value = new Date().toISOString();
-    }
+    // if (!serverTime.value) {
+    //     serverTime.value = new Date().toISOString();
+    // }
 });
 
 const count = ref<number>(0);
