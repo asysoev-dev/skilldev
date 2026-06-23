@@ -29,7 +29,7 @@ module.exports = merge(baseConfig, {
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         new MiniCssExtractPlugin({
-            filename: 'css/[name].[contenthash].css',
+            filename: 'css/[name].[contenthash:8].css',
         }),
     ],
     optimization: {
