@@ -32,10 +32,10 @@ module.exports = {
                 },
                 exclude: /node_modules/,
             },
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
-            },
+            // {
+            //     test: /\.css$/,
+            //     use: ['style-loader', 'css-loader'],
+            // },
         ],
     },
     plugins: [
@@ -46,7 +46,9 @@ module.exports = {
             title: 'SkillDev',
         }),
         new CopyWebpackPlugin({
-            patterns: [{ from: path.resolve(__dirname, '../public/favicon.ico'), to: 'favicon.ico' }],
+            patterns: [
+                { from: path.resolve(__dirname, '../public/favicon.ico'), to: 'favicon.ico' },
+            ],
         }),
         new webpack.DefinePlugin({
             __VUE_OPTIONS_API__: JSON.stringify(true),

@@ -14,6 +14,14 @@ module.exports = merge(baseConfig, {
         libraryTarget: 'commonjs2',
         clean: true,
     },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: ['css-loader'],
+            },
+        ],
+    },
     externals: nodeExternals({
         allowlist: [/\.css$/, /\?vue&type=style/],
     }),

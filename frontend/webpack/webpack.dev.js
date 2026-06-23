@@ -25,6 +25,14 @@ module.exports = merge(baseConfig, {
             },
         },
     },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
+        ],
+    },
     plugins: [
         new Dotenv({
             path: path.resolve(__dirname, '../../.env.dev'),

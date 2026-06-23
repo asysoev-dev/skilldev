@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.SSR_PORT || 3000
+const PORT = process.env.SSR_PORT || 3000;
 
 let renderer;
 
@@ -29,8 +29,9 @@ const template = (html, state) => `
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillDev</title>
+    <title>SkillDev - Frontend Developer Portfolio</title>
     <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
     <div id="app">${html}</div>
@@ -38,11 +39,20 @@ const template = (html, state) => `
     <script src="/client.js"></script>
   </body>
   </html>
-`
+`;
 
 loadRenderer().then(() => {
-    app.get('/', async (req, res) => {
+    const cssPath = path.resolve(__dirname, 'dist/css');
+    if (fs.existsSync(cssPath)) {
+        app.use('/css', express.static(cssPath));
+        console.log('CSS served from:', cssPath);
+    } else {
+        console.warn('CSS directory not found');
+    }
 
+    app.use(express.static(path.resolve(__dirname, 'dist')));
+
+    app.get('/', async (req, res) => {
         if (!renderer) {
             const indexHtml = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf-8');
             res.send(indexHtml);
@@ -51,15 +61,12 @@ loadRenderer().then(() => {
 
         try {
             const { html, state } = await renderer('/');
-
             res.send(template(html, state));
         } catch (error) {
             console.error('Render error:', error.message);
             res.status(500).send('Server Error');
         }
     });
-
-    app.use(express.static(path.resolve(__dirname, 'dist')));
 
     app.use((req, res) => {
         const indexHtml = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf-8');
