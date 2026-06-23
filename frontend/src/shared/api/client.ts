@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { useUserStore } from '@entities/user';
-import { router } from '@/app/providers/router';
+import { createRouter } from '@app/providers/router';
 
 interface RefreshResponse {
     accessToken: string;
@@ -51,10 +51,14 @@ const processQueue = async (
     failedQueue = [];
 };
 
+const router = typeof window !== 'undefined' ? createRouter() : null;
+
 const logoutAndRedirect = async () => {
     const userStore = useUserStore();
     userStore.logout();
-    await router.push('/auth');
+    if (router) {
+        await router.push('/auth');
+    }
 };
 
 apiClient.interceptors.request.use(
