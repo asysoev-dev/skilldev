@@ -1,29 +1,54 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter as createVueRouter, createWebHistory, createMemoryHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import { useUserStore } from '@entities/user';
 
-const routes = [
-    { path: '/', component: () => import('@pages/home/ui/HomePage.vue') },
-    { path: '/auth', component: () => import('@pages/auth/ui/AuthPage.vue') },
+const routes: RouteRecordRaw[] = [
+    {
+        path: '/',
+        name: 'home',
+        component: () => import('@pages/home/ui/HomePage.vue'),
+    },
+    {
+        path: '/auth',
+        name: 'auth',
+        component: () => import('@pages/auth/ui/AuthPage.vue'),
+    },
     {
         path: '/dashboard',
+        name: 'dashboard',
         component: () => import('@pages/dashboard/ui/DashboardPage.vue'),
         meta: { requiresAuth: true },
     },
 ];
 
-export const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
+export function createRouter() {
+    const history = typeof window !== 'undefined' ? createWebHistory() : createMemoryHistory();
 
-router.beforeEach((to, from, next) => {
-    const userStore = useUserStore();
+    const router = createVueRouter({
+        history,
+        routes,
+    });
 
-    if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-        next('/auth');
-    } else if (to.path === '/auth' && userStore.isAuthenticated) {
-        next('/dashboard');
-    } else {
+    router.beforeEach((to, from, next) => {
+        if (typeof window === 'undefined') {
+            next();
+            return;
+        }
+
+        const userStore = useUserStore();
+
+        if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+            next('/auth');
+            return;
+        }
+
+        if (to.path === '/auth' && userStore.isAuthenticated) {
+            next('/dashboard');
+            return;
+        }
+
         next();
-    }
-});
+    });
+
+    return router;
+}
