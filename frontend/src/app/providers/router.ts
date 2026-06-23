@@ -2,21 +2,25 @@ import { createRouter as createVueRouter, createWebHistory, createMemoryHistory 
 import type { RouteRecordRaw } from 'vue-router';
 import { useUserStore } from '@entities/user';
 
+import HomePage from '@pages/home/ui/HomePage.vue';
+import AuthPage from '@pages/auth/ui/AuthPage.vue';
+import DashboardPage from '@pages/dashboard/ui/DashboardPage.vue';
+
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'home',
-        component: () => import('@pages/home/ui/HomePage.vue'),
+        component: HomePage,
     },
     {
         path: '/auth',
         name: 'auth',
-        component: () => import('@pages/auth/ui/AuthPage.vue'),
+        component: AuthPage,
     },
     {
         path: '/dashboard',
         name: 'dashboard',
-        component: () => import('@pages/dashboard/ui/DashboardPage.vue'),
+        component: DashboardPage,
         meta: { requiresAuth: true },
     },
 ];
