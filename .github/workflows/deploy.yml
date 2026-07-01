@@ -26,7 +26,6 @@ jobs:
       - name: Build frontend
         run: |
           cd frontend
-          rm -rf dist dist-server
           npm ci
           npm run build:client
           npm run build:server
@@ -58,15 +57,6 @@ jobs:
           source: ".,!node_modules,!frontend/node_modules,!backend/node_modules"
           target: "/root/skilldev"
 
-      - name: Copy dist-server to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: "frontend/dist-server"
-          target: "/root/skilldev/frontend"
-
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -75,8 +65,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /root/skilldev
-            rm -rf frontend/dist/css
-            rm -rf frontend/dist-server
             docker compose -f docker-compose.prod.yml down
             docker rmi skilldev-backend skilldev-frontend skilldev-frontend-ssr 2>/dev/null || true
             docker compose -f docker-compose.prod.yml build --no-cache
