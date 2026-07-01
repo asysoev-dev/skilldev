@@ -48,21 +48,23 @@ jobs:
           echo "SSR_PORT=${{ secrets.SSR_PORT }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
 
-      - name: Package and copy files to VPS
-        run: |
-          tar -czf skilldev.tar.gz \
-            --exclude='node_modules' \
-            --exclude='frontend/node_modules' \
-            --exclude='backend/node_modules' \
-            --exclude='.git' \
-            --exclude='frontend/dist' \
-            --exclude='backend/dist' \
-            --warning=no-file-changed \
-            .
-          echo "${{ secrets.VPS_SSH_KEY }}" > key.pem
-          chmod 600 key.pem
-          scp -o StrictHostKeyChecking=no -i key.pem skilldev.tar.gz ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/skilldev/
-          rm -f key.pem skilldev.tar.gz
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: |
+            ./
+            !node_modules
+            !frontend/node_modules
+            !backend/node_modules
+            !.git
+            !frontend/dist
+            !backend/dist
+          target: "/root/skilldev"
+          strip_components: 0
+          rm: true
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -72,8 +74,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /root/skilldev
-            tar -xzf skilldev.tar.gz
-            rm skilldev.tar.gz
 
             rm -rf frontend/dist/css
             rm -rf frontend/dist-server
