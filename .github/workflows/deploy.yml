@@ -29,6 +29,7 @@ jobs:
           npm ci
           npm run build:client
           npm run build:server
+          ls -la dist-server/
         env:
           VUE_API_URL: ${{ secrets.VUE_API_URL }}
 
@@ -65,10 +66,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /root/skilldev
-
             rm -rf frontend/dist/css
             rm -rf frontend/dist-server
-
             docker compose -f docker-compose.prod.yml down
             docker system prune -a -f
             docker compose -f docker-compose.prod.yml build --no-cache
