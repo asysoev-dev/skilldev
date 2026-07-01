@@ -17,13 +17,16 @@ module.exports = merge(baseConfig, {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: ['css-loader'],
+                test: /\.(css|scss|sass)$/,
+                use: [
+                    'css-loader',
+                    'sass-loader',
+                ],
             },
         ],
     },
     externals: nodeExternals({
-        allowlist: [/\.css$/, /\?vue&type=style/],
+        allowlist: [/\.(css|scss|sass)$/, /\?vue&type=style/],
     }),
     plugins: [
         new webpack.DefinePlugin({

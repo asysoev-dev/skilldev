@@ -3,6 +3,7 @@ const { merge } = require('webpack-merge');
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const baseConfig = require('./webpack.base');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = merge(baseConfig, {
     mode: 'production',
@@ -14,10 +15,25 @@ module.exports = merge(baseConfig, {
         publicPath: '/',
     },
     devtool: 'source-map',
+    module: {
+        rules: [
+            {
+                test: /\.(css|scss|sass)$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader'
+                ],
+            },
+        ],
+    },
     plugins: [
         new Dotenv({
             path: path.resolve(__dirname, '../../.env.dev'),
             systemvars: true,
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'css/[name].[contenthash:8].css',
         }),
     ],
     optimization: {

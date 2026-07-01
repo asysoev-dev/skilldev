@@ -16,7 +16,7 @@ module.exports = merge(baseConfig, {
     devServer: {
         port: 3005,
         hot: true,
-        open: true,
+        open: false,
         historyApiFallback: true,
         client: {
             overlay: {
@@ -28,8 +28,12 @@ module.exports = merge(baseConfig, {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
+                test: /\.(css|scss|sass)$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ],
             },
         ],
     },

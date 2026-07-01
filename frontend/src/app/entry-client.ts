@@ -1,5 +1,5 @@
 import { createApp } from '@/app';
-
+import '@/app/styles/main.scss'
 const { app, router, pinia } = createApp();
 
 if (typeof window !== 'undefined' && window.__INITIAL_STATE__) {
