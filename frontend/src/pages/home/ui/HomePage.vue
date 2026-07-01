@@ -1,5 +1,5 @@
 <template>
-    <h1>Просто пустой проект [DEPLOY TEST 8]</h1>
+    <h1>Просто пустой проект [DEPLOY TEST 9]</h1>
     <Button :icon-left="CursorArrowRippleIcon" variant="success" @click="increment"
         >Нажатий: {{ count }}</Button
     >
