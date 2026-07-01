@@ -1,14 +1,15 @@
 <template>
-    <div class="container">
-        <h1>Просто пустой проект [DELOY TEST 7]</h1>
-        <button @click="increment">Нажатий: {{ count }}</button>
-        <!-- <p v-if="serverTime">Server time: {{ serverTime }}</p> -->
-    </div>
+    <h1>Просто пустой проект [DEPLOY TEST 8]</h1>
+    <Button :icon-left="CursorArrowRippleIcon" variant="success" @click="increment"
+        >Нажатий: {{ count }}</Button
+    >
+    <!-- <p v-if="serverTime">Server time: {{ serverTime }}</p> -->
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onServerPrefetch } from 'vue';
-
+import Button from '@/shared/ui/Button/Button.vue';
+import { CursorArrowRippleIcon } from '@heroicons/vue/24/outline';
 const serverTime = ref('');
 
 onServerPrefetch(async () => {
@@ -27,23 +28,3 @@ const increment = (): void => {
     count.value++;
 };
 </script>
-
-<style scoped>
-.container {
-    text-align: center;
-    margin-top: 50px;
-    font-family: Arial, sans-serif;
-}
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #42b883;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
-button:hover {
-    background-color: #35495e;
-}
-</style>

@@ -67,11 +67,11 @@ const testLogin = async () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/app/styles/mixins' as *;
+
 .auth-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex(row, center, center);
     min-height: 80vh;
 }
 
