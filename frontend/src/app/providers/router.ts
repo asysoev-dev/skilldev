@@ -1,7 +1,7 @@
 import { createRouter as createVueRouter, createWebHistory, createMemoryHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 import { useUserStore } from '@entities/user';
-import { DefaultLayout } from '@widgets/layouts';
+import { DefaultLayout } from '@/widgets/layout';
 
 const routes: RouteRecordRaw[] = [
     {
