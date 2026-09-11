@@ -26,6 +26,7 @@ jobs:
       - name: Build frontend
         run: |
           cd frontend
+          rm -rf dist dist-server
           npm ci
           npm run build:client
           npm run build:server
@@ -65,6 +66,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /root/skilldev
+            rm -rf frontend/dist/css
+            rm -rf frontend/dist-server
             docker compose -f docker-compose.prod.yml down
             docker rmi skilldev-backend skilldev-frontend skilldev-frontend-ssr 2>/dev/null || true
             docker compose -f docker-compose.prod.yml build --no-cache
