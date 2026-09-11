@@ -5,24 +5,31 @@
         :disabled="disabled || loading"
         :aria-busy="loading"
         :aria-disabled="disabled || loading"
-        @click.prevent="handleClick"
+        @click="handleClick"
     >
-        <span v-if="loading" class="button-spinner">
-            <svg class="spinner-icon" viewBox="0 0 50 50">
-                <circle class="spinner-path" cx="25" cy="25" r="20" fill="none" stroke-width="4" />
+        <span v-if="loading" class="button__spinner">
+            <svg class="button__spinner-icon" viewBox="0 0 50 50">
+                <circle
+                    class="button__spinner-path"
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                    stroke-width="4"
+                />
             </svg>
         </span>
 
-        <span v-if="iconLeft && !loading" class="button-icon-left">
-            <component :is="iconLeft" class="button-icon" />
+        <span v-if="iconLeft && !loading" class="button__icon button__icon--left">
+            <component :is="iconLeft" />
         </span>
 
-        <span v-if="!loading" class="button-text">
+        <span v-if="!loading" class="button__text">
             <slot>{{ label }}</slot>
         </span>
 
-        <span v-if="iconRight && !loading" class="button-icon-right">
-            <component :is="iconRight" class="button-icon" />
+        <span v-if="iconRight && !loading" class="button__icon button__icon--right">
+            <component :is="iconRight" />
         </span>
     </button>
 </template>
@@ -34,11 +41,14 @@ import type { Component } from 'vue';
 export type ButtonVariant =
     | 'primary'
     | 'secondary'
-    | 'success'
-    | 'danger'
-    | 'warning'
     | 'outline'
-    | 'ghost';
+    | 'ghost'
+    | 'text'
+    | 'primary-action'
+    | 'danger-action'
+    | 'outline-primary-action'
+    | 'outline-danger-action';
+
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ButtonType = 'button' | 'submit' | 'reset';
 
@@ -50,6 +60,7 @@ interface Props {
     loading?: boolean;
     disabled?: boolean;
     fullWidth?: boolean;
+    fullWidthMobile?: boolean;
     iconLeft?: Component;
     iconRight?: Component;
     class?: string;
@@ -63,6 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
     loading: false,
     disabled: false,
     fullWidth: false,
+    fullWidthMobile: false,
 });
 
 const emit = defineEmits<{
@@ -72,71 +84,50 @@ const emit = defineEmits<{
 const buttonClasses = computed(() => {
     const classes: string[] = ['button', `button--${props.variant}`, `button--${props.size}`];
 
-    if (props.fullWidth) {
-        classes.push('button--full-width');
-    }
-
-    if (props.loading) {
-        classes.push('button--loading');
-    }
-
-    if (props.disabled) {
-        classes.push('button--disabled');
-    }
-
-    if (props.class) {
-        classes.push(props.class);
-    }
+    if (props.fullWidth) classes.push('button--full-width');
+    if (props.fullWidthMobile) classes.push('button--full-width-mobile');
+    if (props.loading) classes.push('button--loading');
+    if (props.disabled) classes.push('button--disabled');
+    if (props.class) classes.push(props.class);
 
     return classes.join(' ');
 });
 
 const handleClick = (event: MouseEvent) => {
-    if (props.disabled || props.loading) {
-        return;
-    }
+    if (props.disabled || props.loading) return;
     emit('click', event);
 };
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:color';
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
 .button {
     @include button-base;
-    position: relative;
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $radius-md;
-    background-color: $primary;
-    color: $white;
-    border: 2px solid transparent;
-    font-weight: $font-weight-medium;
-    text-decoration: none;
-    transition: all $transition-base;
-    min-height: 40px;
-    min-width: 40px;
-    gap: $spacing-sm;
+    @include focus-ring;
 
-    &:focus-visible {
-        outline: 2px solid $primary;
-        outline-offset: 2px;
-    }
+    position: relative;
+    padding: 12px 24px;
+    min-height: 44px;
+    border-radius: var(--radius-md);
+    font-size: var(--font-body);
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: all var(--transition-base);
+    gap: var(--gap-sm);
 
     &:hover:not(:disabled):not(.button--loading) {
-        // transform: translateY(-1px);
-        box-shadow: $shadow-md;
+        transform: translateY(-2px);
     }
 
     &:active:not(:disabled):not(.button--loading) {
-        // transform: translateY(0);
-        box-shadow: $shadow-sm;
+        transform: translateY(0);
     }
 
     &:disabled,
     &.button--disabled {
-        opacity: 0.6;
+        opacity: 0.5;
         cursor: not-allowed;
         transform: none !important;
         box-shadow: none !important;
@@ -146,49 +137,37 @@ const handleClick = (event: MouseEvent) => {
         cursor: wait;
         opacity: 0.8;
     }
+}
 
-    // Адаптив
-    @include respond(mobile) {
-        font-size: $font-size-sm;
-        padding: $spacing-sm $spacing-md;
-        min-height: 36px;
+// ИКОНКИ
+.button__icon {
+    @include flex(row, center, center);
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+
+    :deep(svg) {
+        width: 100%;
+        height: 100%;
     }
 }
 
-.button-icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    pointer-events: none;
-}
-
-.button-icon-left,
-.button-icon-right {
+// СПИННЕР
+.button__spinner {
     @include flex(row, center, center);
     flex-shrink: 0;
-}
-
-.button-icon-left {
-    margin-right: $spacing-xs;
-}
-
-.button-icon-right {
-    margin-left: $spacing-xs;
-}
-
-.button-spinner {
-    @include flex(row, center, center);
-    margin-right: $spacing-sm;
-    flex-shrink: 0;
-}
-
-.spinner-icon {
     width: 20px;
     height: 20px;
+}
+
+.button__spinner-icon {
+    width: 100%;
+    height: 100%;
     animation: spin 1s linear infinite;
 }
 
-.spinner-path {
+.button__spinner-path {
     stroke: currentColor;
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
@@ -215,155 +194,172 @@ const handleClick = (event: MouseEvent) => {
     }
 }
 
-// Primary
+// ВАРИАНТЫ
+
+// PRIMARY (заливка)
 .button--primary {
-    background-color: $primary;
-    color: $white;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-color: var(--btn-bg);
 
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: color.adjust($primary, $lightness: -10%);
+    &:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
     }
 }
 
-// Secondary
+// SECONDARY
 .button--secondary {
-    background-color: $secondary;
-    color: $white;
+    background: var(--neon-blue);
+    color: #08080c;
+    border-color: var(--neon-blue);
 
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: color.adjust($secondary, $lightness: -10%);
+    &:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(0, 212, 255, 0.3);
     }
 }
 
-// Success
-.button--success {
-    background-color: $success;
-    color: $white;
-
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: color.adjust($success, $lightness: -10%);
-    }
-}
-
-// Danger
-.button--danger {
-    background-color: $danger;
-    color: $white;
-
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: color.adjust($danger, $lightness: -10%);
-    }
-}
-
-// Warning
-.button--warning {
-    background-color: $warning;
-    color: $dark;
-
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: color.adjust($warning, $lightness: -10%);
-    }
-}
-
-// Outline
+// OUTLINE (стеклянная)
 .button--outline {
-    background-color: transparent;
-    color: $primary;
-    border-color: $primary;
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
 
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: $primary;
-        color: $white;
+    &:hover:not(:disabled) {
+        background: var(--glass-bg);
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
     }
 }
 
-// Ghost
+// GHOST
 .button--ghost {
-    background-color: transparent;
-    color: $primary;
+    background: transparent;
+    color: var(--text-main);
     border-color: transparent;
 
-    &:hover:not(:disabled):not(.button--loading) {
-        background-color: color.adjust($primary, $alpha: -0.9);
+    &:hover:not(:disabled) {
+        background: var(--glass-bg);
     }
 }
 
-// XS
-.button--xs {
-    padding: $spacing-xs $spacing-sm;
-    font-size: $font-size-sm;
-    min-height: 28px;
-    border-radius: $radius-sm;
-
-    .button-icon {
-        width: 14px;
-        height: 14px;
-    }
-}
-
-// SM
-.button--sm {
-    padding: $spacing-xs $spacing-md;
-    font-size: $font-size-sm;
+// TEXT
+.button--text {
+    background: transparent;
+    color: var(--text-main);
+    padding: 8px 4px;
     min-height: 32px;
+    border-radius: 0;
+    border-bottom: 1px solid transparent;
 
-    .button-icon {
-        width: 16px;
-        height: 16px;
+    &:hover:not(:disabled) {
+        color: var(--neon-blue);
+        border-bottom-color: var(--neon-blue);
+        transform: none;
     }
 }
 
-// MD
+// PRIMARY-ACTION (синий неон с прозрачностью)
+.button--primary-action {
+    background: rgba(0, 212, 255, 0.6);
+    color: #08080c;
+    backdrop-filter: blur(4px);
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(0, 212, 255, 0.25);
+    }
+}
+
+// DANGER-ACTION (розовый неон с прозрачностью)
+.button--danger-action {
+    background: rgba(255, 45, 149, 0.6);
+    color: #08080c;
+    backdrop-filter: blur(4px);
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(255, 45, 149, 0.25);
+    }
+}
+
+// OUTLINE PRIMARY-ACTION
+.button--outline-primary-action {
+    background: transparent;
+    color: var(--neon-blue);
+    border: 1px solid rgba(0, 212, 255, 0.4);
+
+    &:hover:not(:disabled) {
+        background: rgba(0, 212, 255, 0.1);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+    }
+}
+
+// OUTLINE DANGER-ACTION
+.button--outline-danger-action {
+    background: transparent;
+    color: var(--neon-pink);
+    border: 1px solid rgba(255, 45, 149, 0.4);
+
+    &:hover:not(:disabled) {
+        background: rgba(255, 45, 149, 0.1);
+        box-shadow: 0 0 15px rgba(255, 45, 149, 0.1);
+    }
+}
+
+// РАЗМЕРЫ
+
+.button--xs {
+    padding: 6px 12px;
+    min-height: 32px;
+    font-size: var(--font-small);
+    border-radius: var(--radius-sm);
+}
+
+.button--sm {
+    padding: 8px 16px;
+    min-height: 36px;
+    font-size: var(--font-small);
+}
+
 .button--md {
-    padding: $spacing-sm $spacing-lg;
-    font-size: $font-size-base;
-    min-height: 40px;
-
-    .button-icon {
-        width: 20px;
-        height: 20px;
-    }
+    padding: 12px 24px;
+    min-height: 44px;
+    font-size: var(--font-body);
 }
 
-// LG
 .button--lg {
-    padding: $spacing-md $spacing-xl;
-    font-size: $font-size-lg;
-    min-height: 48px;
-
-    .button-icon {
-        width: 24px;
-        height: 24px;
-    }
-
-    @include respond(mobile) {
-        padding: $spacing-sm $spacing-lg;
-        font-size: $font-size-base;
-        min-height: 40px;
-    }
+    padding: 14px 32px;
+    min-height: 52px;
+    font-size: 18px;
 }
 
-// XL
 .button--xl {
-    padding: $spacing-lg $spacing-xxl;
-    font-size: $font-size-lg;
-    min-height: 56px;
-
-    .button-icon {
-        width: 28px;
-        height: 28px;
-    }
-
-    @include respond(mobile) {
-        padding: $spacing-md $spacing-lg;
-        font-size: $font-size-base;
-        min-height: 44px;
-    }
+    padding: 18px 40px;
+    min-height: 60px;
+    font-size: 20px;
 }
 
-// на всю ширину
+// FULL-WIDTH
+
 .button--full-width {
     width: 100%;
-    display: flex;
+}
+
+// На мобилке — 100%, на планшете — auto
+.button--full-width-mobile {
+    width: 100%;
+
+    @include respond(tablet) {
+        width: auto;
+    }
+}
+
+// АДАПТИВ
+
+@include respond-down(tablet) {
+    .button--lg,
+    .button--xl {
+        padding: 12px 24px;
+        min-height: 44px;
+        font-size: var(--font-body);
+    }
 }
 </style>
