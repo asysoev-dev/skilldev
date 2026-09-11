@@ -1,7 +1,7 @@
 <template>
-    <Teleport to="body">
+    <Teleport v-if="open" to="body">
         <Transition name="drawer">
-            <div v-if="open" class="drawer" role="dialog" aria-modal="true" @click.self="close">
+            <div class="drawer" role="dialog" aria-modal="true" @click.self="close">
                 <aside class="drawer__panel">
                     <header class="drawer__header">
                         <RouterLink to="/" class="drawer__logo" @click="close">
