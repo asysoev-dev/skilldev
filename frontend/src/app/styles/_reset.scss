@@ -14,13 +14,23 @@ html {
 }
 
 body {
-    font-family: $font-family-base;
-    font-size: $font-size-base;
+    font-family:
+        'Inter',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
+    font-size: var(--font-body);
     line-height: 1.6;
-    color: $dark;
-    background-color: $light;
+    color: var(--text-main);
+    background-color: var(--bg-main);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition:
+        background-color var(--transition-theme),
+        color var(--transition-theme);
 }
 
 h1,
@@ -29,16 +39,26 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: $font-weight-bold;
+    font-weight: 600;
     line-height: 1.2;
 }
 
+h1 {
+    font-size: var(--font-h1);
+}
+h2 {
+    font-size: var(--font-h2);
+}
+h3 {
+    font-size: var(--font-h3);
+}
+
 p {
-    margin-bottom: $spacing-md;
+    margin-bottom: var(--gap-md);
 }
 
 a {
-    color: $primary;
+    color: var(--neon-blue);
     text-decoration: none;
 
     &:hover {
@@ -72,4 +92,16 @@ button {
 table {
     border-collapse: collapse;
     width: 100%;
+}
+
+// Уважение к пользователю
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

@@ -3,18 +3,28 @@
 
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: $container-max-width;
     margin: 0 auto;
-    padding: 0 $spacing-md;
-
-    @include respond(tablet) {
-        padding: 0 $spacing-lg;
-    }
+    padding: 0 var(--container-padding);
 }
 
+// скрыть визуально, но оставить для скринридеров
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+// Переходы страниц
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity $transition-base;
+    transition: opacity var(--transition-base);
 }
 
 .fade-enter-from,
