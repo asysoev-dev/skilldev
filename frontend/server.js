@@ -23,17 +23,18 @@ async function loadRenderer() {
     }
 }
 
-const getCssFile = () => {
+const getCssFiles = () => {
     const cssDir = path.resolve(__dirname, 'dist/css');
-    if (!fs.existsSync(cssDir)) return '/css/main.css';
+    if (!fs.existsSync(cssDir)) return [];
 
     const files = fs.readdirSync(cssDir);
-    const mainCss = files.find((f) => f.startsWith('main.') && f.endsWith('.css'));
-    return mainCss ? `/css/${mainCss}` : '/css/main.css';
+    return files.filter((f) => f.endsWith('.css')).map((f) => `/css/${f}`);
 };
 
 const template = (html, state) => {
-    const cssPath = getCssFile();
+    const cssFiles = getCssFiles();
+    const cssLinks = cssFiles.map((f) => `<link rel="stylesheet" href="${f}">`).join('\n        ');
+
     return `
     <!DOCTYPE html>
     <html lang="ru">
@@ -42,7 +43,7 @@ const template = (html, state) => {
         <link rel="icon" href="/favicon.ico">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>SkillDev - Frontend Developer Portfolio</title>
-        <link rel="stylesheet" href="${cssPath}">
+        ${cssLinks}
     </head>
     <body>
         <div id="app">${html}</div>
