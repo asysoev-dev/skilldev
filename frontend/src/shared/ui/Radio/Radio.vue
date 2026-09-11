@@ -8,7 +8,7 @@
             :disabled="disabled"
             :aria-invalid="!!error"
             class="radio__input"
-            @change="onChange"
+            @change="emit('update:modelValue', value)"
         />
         <span class="radio__mark" :class="{ 'radio__mark--error': !!error }">
             <span class="radio__dot" />
@@ -29,7 +29,7 @@ interface Props {
     error?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
     modelValue: '',
     name: 'radio',
     label: '',
@@ -37,19 +37,10 @@ const props = withDefaults(defineProps<Props>(), {
     error: '',
 });
 
-const emit = defineEmits<{
-    (e: 'update:modelValue', value: string | number | boolean): void;
-    (e: 'change', value: string | number | boolean): void;
-}>();
-
-const onChange = () => {
-    emit('update:modelValue', props.value);
-    emit('change', props.value);
-};
+const emit = defineEmits<{ (e: 'update:modelValue', value: string | number | boolean): void }>();
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
 .radio {
@@ -84,7 +75,7 @@ const onChange = () => {
     position: relative;
 
     body:not(.dark-theme) & {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid var(--border-color);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
     }
@@ -100,7 +91,7 @@ const onChange = () => {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #ffffff;
+    background: #fff;
     opacity: 0;
     transform: scale(0.5);
     transition: all var(--transition-base);
@@ -134,6 +125,5 @@ const onChange = () => {
 .radio__label {
     font-size: var(--font-body);
     color: var(--text-main);
-    transition: color var(--transition-theme);
 }
 </style>

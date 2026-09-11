@@ -1,61 +1,45 @@
 @use 'variables' as *;
 
-// Min-width
-@mixin respond($breakpoint) {
-    @if $breakpoint == mobile {
-        @media (min-width: $breakpoint-mobile) {
-            @content;
-        }
-    } @else if $breakpoint == tablet {
-        @media (min-width: $breakpoint-tablet) {
-            @content;
-        }
-    } @else if $breakpoint == desktop {
-        @media (min-width: $breakpoint-desktop) {
-            @content;
-        }
-    } @else if $breakpoint == wide {
-        @media (min-width: $breakpoint-wide) {
-            @content;
-        }
+@mixin respond($bp) {
+    @if $bp == mobile {
+        @media (min-width: $breakpoint-mobile) { @content; }
+    } @else if $bp == tablet {
+        @media (min-width: $breakpoint-tablet) { @content; }
+    } @else if $bp == desktop {
+        @media (min-width: $breakpoint-desktop) { @content; }
+    } @else if $bp == wide {
+        @media (min-width: $breakpoint-wide) { @content; }
     }
 }
 
-// Max-width
-@mixin respond-down($breakpoint) {
-    @if $breakpoint == tablet {
-        @media (max-width: ($breakpoint-tablet - 1px)) {
-            @content;
-        }
-    } @else if $breakpoint == desktop {
-        @media (max-width: ($breakpoint-desktop - 1px)) {
-            @content;
-        }
+@mixin respond-down($bp) {
+    @if $bp == tablet {
+        @media (max-width: ($breakpoint-tablet - 1px)) { @content; }
+    } @else if $bp == desktop {
+        @media (max-width: ($breakpoint-desktop - 1px)) { @content; }
     }
 }
 
-// FLEX/GRID
-@mixin flex($direction: row, $justify: flex-start, $align: stretch) {
+@mixin flex($dir: row, $justify: flex-start, $align: stretch) {
     display: flex;
-    flex-direction: $direction;
+    flex-direction: $dir;
     justify-content: $justify;
     align-items: $align;
 }
 
-@mixin grid($columns: 2, $gap: var(--gap-md)) {
+@mixin grid($cols: 2, $gap: var(--gap-md)) {
     display: grid;
-    grid-template-columns: repeat($columns, 1fr);
+    grid-template-columns: repeat($cols, 1fr);
     gap: $gap;
 }
 
-@mixin center($position: absolute) {
-    position: $position;
+@mixin center($pos: absolute) {
+    position: $pos;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-// ТЕКСТ
 @mixin truncate {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -69,7 +53,6 @@
     overflow: hidden;
 }
 
-// СТЕКЛО
 @mixin glass {
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
@@ -81,7 +64,6 @@
     background: var(--glass-hover);
 }
 
-// Стеклянный фокус
 @mixin glass-focus {
     outline: none;
     border-color: var(--neon-blue);
@@ -90,17 +72,15 @@
         inset 0 0 15px rgba(0, 212, 255, 0.05);
 }
 
-// НЕОН
-@mixin neon-glow($color: var(--neon-blue), $intensity: 0.2) {
+@mixin neon-glow($intensity: 0.2) {
     box-shadow: 0 0 25px rgba(0, 212, 255, $intensity);
 }
 
-@mixin neon-text($color: var(--neon-blue)) {
-    color: $color;
+@mixin neon-text {
+    color: var(--neon-blue);
     text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
-// КНОПКИ
 @mixin button-base {
     display: inline-flex;
     align-items: center;
@@ -121,7 +101,6 @@
     }
 }
 
-// ДОСТУПНОСТЬ (a11y)
 @mixin focus-ring {
     &:focus-visible {
         outline: 2px solid var(--neon-blue);
@@ -129,7 +108,6 @@
     }
 }
 
-// Минимальная touch-зона 44x44
 @mixin touch-target {
     min-width: 44px;
     min-height: 44px;

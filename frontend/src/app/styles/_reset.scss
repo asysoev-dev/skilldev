@@ -14,13 +14,7 @@ html {
 }
 
 body {
-    font-family:
-        'Inter',
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: var(--font-body);
     line-height: 1.6;
     color: var(--text-main);
@@ -33,25 +27,14 @@ body {
         color var(--transition-theme);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     line-height: 1.2;
 }
 
-h1 {
-    font-size: var(--font-h1);
-}
-h2 {
-    font-size: var(--font-h2);
-}
-h3 {
-    font-size: var(--font-h3);
-}
+h1 { font-size: var(--font-h1); }
+h2 { font-size: var(--font-h2); }
+h3 { font-size: var(--font-h3); }
 
 p {
     margin-bottom: var(--gap-md);
@@ -66,10 +49,7 @@ a {
     }
 }
 
-ul,
-ol {
-    list-style: none;
-}
+ul, ol { list-style: none; }
 
 img {
     max-width: 100%;
@@ -77,28 +57,20 @@ img {
     display: block;
 }
 
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
     font-family: inherit;
     font-size: inherit;
 }
 
-button {
-    cursor: pointer;
-}
+button { cursor: pointer; }
 
 table {
     border-collapse: collapse;
     width: 100%;
 }
 
-// Уважение к пользователю
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;

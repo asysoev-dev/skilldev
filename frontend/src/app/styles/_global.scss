@@ -8,7 +8,6 @@
     padding: 0 var(--container-padding);
 }
 
-// скрыть визуально, но оставить для скринридеров
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -21,7 +20,6 @@
     border: 0;
 }
 
-// Переходы страниц
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity var(--transition-base);

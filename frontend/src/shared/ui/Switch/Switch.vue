@@ -7,7 +7,7 @@
             class="switch__input"
             role="switch"
             :aria-checked="modelValue"
-            @change="onChange"
+            @change="emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
         />
         <span class="switch__slider">
             <span class="switch__thumb" />
@@ -25,26 +25,16 @@ interface Props {
     disabled?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
     modelValue: false,
     label: '',
     disabled: false,
 });
 
-const emit = defineEmits<{
-    (e: 'update:modelValue', value: boolean): void;
-    (e: 'change', value: boolean): void;
-}>();
-
-const onChange = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    emit('update:modelValue', target.checked);
-    emit('change', target.checked);
-};
+const emit = defineEmits<{ (e: 'update:modelValue', value: boolean): void }>();
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
 .switch {
@@ -97,16 +87,12 @@ const onChange = (event: Event) => {
     background: #9ca3af;
     transition: all var(--transition-base);
 
-    body.dark-theme & {
-        background: #777;
-    }
+    body.dark-theme & { background: #777; }
 }
 
 .switch__input:checked + .switch__slider {
     background: rgba(0, 212, 255, 0.4);
-    box-shadow:
-        0 0 15px rgba(0, 212, 255, 0.2),
-        inset 0 0 15px rgba(0, 212, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2), inset 0 0 15px rgba(0, 212, 255, 0.1);
 }
 
 .switch__input:checked + .switch__slider .switch__thumb {
@@ -123,6 +109,5 @@ const onChange = (event: Event) => {
 .switch__label {
     font-size: var(--font-body);
     color: var(--text-main);
-    transition: color var(--transition-theme);
 }
 </style>

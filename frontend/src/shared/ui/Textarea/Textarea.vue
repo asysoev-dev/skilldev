@@ -1,28 +1,26 @@
 <template>
-    <div class="textarea-wrapper" :class="{ 'textarea-wrapper--error': hasError }">
-        <label v-if="label" :for="textareaId" class="textarea-wrapper__label">
-            {{ label }}
-        </label>
+    <div class="textarea" :class="{ 'textarea--error': !!error }">
+        <label v-if="label" :for="id" class="textarea__label">{{ label }}</label>
 
-        <div class="textarea-wrapper__field" :class="fieldClasses">
+        <div class="textarea__field" :class="fieldClasses">
             <textarea
-                :id="textareaId"
+                :id="id"
                 ref="textareaRef"
                 :value="modelValue"
                 :placeholder="placeholder"
                 :disabled="disabled"
                 :readonly="readonly"
                 :rows="rows"
-                :aria-invalid="hasError"
-                class="textarea-wrapper__input"
+                :aria-invalid="!!error"
+                class="textarea__control"
                 @input="onInput"
-                @focus="onFocus"
-                @blur="onBlur"
+                @focus="isFocused = true"
+                @blur="isFocused = false"
             />
         </div>
 
-        <p v-if="hasError" class="textarea-wrapper__error">{{ error }}</p>
-        <p v-else-if="hint" class="textarea-wrapper__hint">{{ hint }}</p>
+        <p v-if="error" class="textarea__error">{{ error }}</p>
+        <p v-else-if="hint" class="textarea__hint">{{ hint }}</p>
     </div>
 </template>
 
@@ -51,67 +49,49 @@ const props = withDefaults(defineProps<Props>(), {
     readonly: false,
 });
 
-const emit = defineEmits<{
-    (e: 'update:modelValue', value: string): void;
-    (e: 'focus', event: FocusEvent): void;
-    (e: 'blur', event: FocusEvent): void;
-}>();
+const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>();
 
-const textareaId = `textarea-${useId()}`;
+const id = `textarea-${useId()}`;
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 const isFocused = ref(false);
 
-const hasError = computed(() => !!props.error);
-
 const fieldClasses = computed(() => ({
-    'textarea-wrapper__field--focused': isFocused.value,
-    'textarea-wrapper__field--disabled': props.disabled,
-    'textarea-wrapper__field--error': hasError.value,
+    'textarea__field--focused': isFocused.value,
+    'textarea__field--disabled': props.disabled,
+    'textarea__field--error': !!props.error,
 }));
 
-const onInput = (event: Event) => {
-    const target = event.target as HTMLTextAreaElement;
-    emit('update:modelValue', target.value);
-};
-
-const onFocus = (event: FocusEvent) => {
-    isFocused.value = true;
-    emit('focus', event);
-};
-
-const onBlur = (event: FocusEvent) => {
-    isFocused.value = false;
-    emit('blur', event);
+const onInput = (e: Event) => {
+    emit('update:modelValue', (e.target as HTMLTextAreaElement).value);
 };
 
 defineExpose({ focus: () => textareaRef.value?.focus() });
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-.textarea-wrapper {
+.textarea {
     display: flex;
     flex-direction: column;
     gap: var(--gap-sm);
     width: 100%;
 }
 
-.textarea-wrapper__label {
+.textarea__label {
     font-size: var(--font-small);
     font-weight: 500;
     color: var(--text-secondary);
 }
 
-.textarea-wrapper__field {
+.textarea__field {
     display: flex;
     width: 100%;
     border-radius: var(--radius-md);
     transition: all var(--transition-base);
 
     body:not(.dark-theme) & {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid var(--border-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
@@ -122,39 +102,31 @@ defineExpose({ focus: () => textareaRef.value?.focus() });
         border: 1px solid var(--glass-border);
     }
 
-    &:hover:not(.textarea-wrapper__field--disabled) {
+    &:hover:not(.textarea__field--disabled) {
         border-color: var(--neon-blue);
     }
 }
 
-.textarea-wrapper__field--focused {
+.textarea__field--focused {
     border-color: var(--neon-blue) !important;
 
-    body:not(.dark-theme) & {
-        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
-    }
-    body.dark-theme & {
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-    }
+    body:not(.dark-theme) & { box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15); }
+    body.dark-theme & { box-shadow: 0 0 20px rgba(0, 212, 255, 0.2); }
 }
 
-.textarea-wrapper__field--error {
+.textarea__field--error {
     border-color: var(--neon-red) !important;
 
-    body:not(.dark-theme) & {
-        box-shadow: 0 0 0 4px rgba(255, 59, 92, 0.15);
-    }
-    body.dark-theme & {
-        box-shadow: 0 0 20px rgba(255, 59, 92, 0.2);
-    }
+    body:not(.dark-theme) & { box-shadow: 0 0 0 4px rgba(255, 59, 92, 0.15); }
+    body.dark-theme & { box-shadow: 0 0 20px rgba(255, 59, 92, 0.2); }
 }
 
-.textarea-wrapper__field--disabled {
+.textarea__field--disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.textarea-wrapper__input {
+.textarea__control {
     width: 100%;
     padding: 12px 16px;
     background: transparent;
@@ -171,19 +143,19 @@ defineExpose({ focus: () => textareaRef.value?.focus() });
     }
 }
 
-.textarea-wrapper__error {
+.textarea__error {
     font-size: var(--font-small);
     color: var(--neon-red);
     margin: 0;
 }
 
-.textarea-wrapper__hint {
+.textarea__hint {
     font-size: var(--font-small);
     color: var(--text-tertiary);
     margin: 0;
 }
 
-.textarea-wrapper--error .textarea-wrapper__label {
+.textarea--error .textarea__label {
     color: var(--neon-red);
 }
 </style>

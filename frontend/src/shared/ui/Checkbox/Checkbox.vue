@@ -34,20 +34,14 @@ const props = withDefaults(defineProps<Props>(), {
     error: '',
 });
 
-const emit = defineEmits<{
-    (e: 'update:modelValue', value: boolean): void;
-    (e: 'change', value: boolean): void;
-}>();
+const emit = defineEmits<{ (e: 'update:modelValue', value: boolean): void }>();
 
-const onChange = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    emit('update:modelValue', target.checked);
-    emit('change', target.checked);
+const onChange = (e: Event) => {
+    emit('update:modelValue', (e.target as HTMLInputElement).checked);
 };
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
 .checkbox {
@@ -84,14 +78,14 @@ const onChange = (event: Event) => {
     svg {
         width: 14px;
         height: 14px;
-        color: #ffffff;
+        color: #fff;
         opacity: 0;
         transform: scale(0.5);
         transition: all var(--transition-base);
     }
 
     body:not(.dark-theme) & {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid var(--border-color);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
     }
@@ -130,6 +124,5 @@ const onChange = (event: Event) => {
 .checkbox__label {
     font-size: var(--font-body);
     color: var(--text-main);
-    transition: color var(--transition-theme);
 }
 </style>

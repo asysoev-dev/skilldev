@@ -1,14 +1,11 @@
 <template>
     <component
-        :is="tag"
+        :is="clickable ? 'button' : tag"
         class="glass-card"
-        :class="cardClasses"
-        :style="cardStyle"
-        :role="clickable ? 'button' : undefined"
-        :tabindex="clickable ? 0 : undefined"
+        :class="classes"
+        :style="style"
+        :type="clickable ? 'button' : undefined"
         @click="onClick"
-        @keydown.enter="onClick"
-        @keydown.space.prevent="onClick"
     >
         <slot />
     </component>
@@ -33,71 +30,43 @@ const props = withDefaults(defineProps<Props>(), {
     clickable: false,
 });
 
-const emit = defineEmits<{
-    (e: 'click', event: Event): void;
-}>();
+const emit = defineEmits<{ (e: 'click', event: Event): void }>();
 
-const cardClasses = computed(() => ({
-    'glass-card--hoverable': props.hoverable,
-    'glass-card--clickable': props.clickable,
-    [`glass-card--padding-${props.padding}`]: true,
-}));
+const classes = computed(() => [
+    {
+        'glass-card--hoverable': props.hoverable,
+        'glass-card--clickable': props.clickable,
+    },
+    `glass-card--padding-${props.padding}`,
+]);
 
-const cardStyle = computed(() => {
-    if (!props.accent) return {};
-    return { '--card-accent': props.accent };
-});
+const style = computed(() => (props.accent ? { '--card-accent': props.accent } : {}));
 
-const onClick = (event: Event) => {
-    if (props.clickable) {
-        emit('click', event);
-    }
-};
+const onClick = (e: Event) => props.clickable && emit('click', e);
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
 .glass-card {
     @include glass;
-
     position: relative;
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
     overflow: hidden;
 }
 
-// PADDING
-.glass-card--padding-sm {
-    padding: var(--gap-md);
+.glass-card--padding-sm { padding: var(--gap-md); }
+.glass-card--padding-md { padding: var(--card-padding); }
+.glass-card--padding-lg { padding: calc(var(--card-padding) * 1.5); }
+
+.glass-card--hoverable:hover {
+    transform: translateY(-4px);
+    background: var(--glass-hover);
 }
 
-.glass-card--padding-md {
-    padding: var(--card-padding);
-}
-
-.glass-card--padding-lg {
-    padding: calc(var(--card-padding) * 1.5);
-}
-
-// HOVER
-.glass-card--hoverable {
-    &:hover {
-        transform: translateY(-4px);
-        background: var(--glass-hover);
-
-        // Если задан accent — неоновая подсветка
-        // & when (isdefined(--card-accent)) {
-        // //     // placeholder для будущих фич
-        // }
-    }
-}
-
-// CLICKABLE
 .glass-card--clickable {
     cursor: pointer;
-
     @include focus-ring;
 }
 </style>

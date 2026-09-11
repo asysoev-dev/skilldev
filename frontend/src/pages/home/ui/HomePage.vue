@@ -1,11 +1,8 @@
 <template>
     <div class="ui-showcase">
-        <h1 class="ui-showcase__title">UI-кит: витрина компонентов</h1>
-        <p class="ui-showcase__subtitle">
-            Временная страница для проверки компонентов. Будет удалена после интеграции.
-        </p>
+        <h1 class="ui-showcase__title">UI-кит: витрина</h1>
+        <p class="ui-showcase__subtitle">Временная страница для проверки компонентов.</p>
 
-        <!-- КНОПКИ -->
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">Кнопки</h2>
 
@@ -18,7 +15,7 @@
                 <Button variant="text">Text</Button>
             </div>
 
-            <h3 class="ui-showcase__subheading">Неоновые (наши)</h3>
+            <h3 class="ui-showcase__subheading">Неоновые</h3>
             <div class="ui-showcase__row">
                 <Button variant="primary-action">Сохранить</Button>
                 <Button variant="danger-action">Удалить</Button>
@@ -43,80 +40,31 @@
             </div>
         </section>
 
-        <!-- ИНПУТЫ -->
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">Поля ввода</h2>
 
             <div class="ui-showcase__grid">
-                <Input
-                    v-model="textValue"
-                    label="Обычный инпут"
-                    placeholder="Введите текст..."
-                    hint="Подсказка под полем"
-                />
-
-                <Input
-                    v-model="emailValue"
-                    type="email"
-                    label="Email"
-                    placeholder="mail@example.com"
-                />
-
-                <Input
-                    v-model="passwordValue"
-                    type="password"
-                    label="Пароль"
-                    placeholder="••••••••"
-                />
-
-                <Input
-                    v-model="searchValue"
-                    type="search"
-                    label="Поиск"
-                    placeholder="Что искать?"
-                    clearable
-                />
-
-                <Input
-                    v-model="errorValue"
-                    label="С ошибкой"
-                    placeholder="Введите что-то..."
-                    error="Это поле обязательно"
-                />
-
-                <Input
-                    v-model="disabledValue"
-                    label="Отключен"
-                    placeholder="Нельзя редактировать"
-                    disabled
-                />
+                <Input v-model="textValue" label="Обычный" placeholder="Введите текст..." hint="Подсказка" />
+                <Input v-model="emailValue" type="email" label="Email" placeholder="mail@example.com" />
+                <Input v-model="passwordValue" type="password" label="Пароль" placeholder="••••••••" />
+                <Input v-model="searchValue" type="search" label="Поиск" placeholder="Что искать?" clearable />
+                <Input v-model="errorValue" label="С ошибкой" placeholder="Введите..." error="Обязательное поле" />
+                <Input v-model="disabledValue" label="Отключен" placeholder="Нельзя" disabled />
             </div>
 
             <div class="ui-showcase__grid">
-                <Textarea
-                    v-model="messageValue"
-                    label="Сообщение"
-                    placeholder="Напишите что-нибудь..."
-                    hint="Максимум 500 символов"
-                />
-
-                <Textarea
-                    v-model="errorTextarea"
-                    label="С ошибкой"
-                    placeholder="Введите..."
-                    error="Слишком короткое сообщение"
-                />
+                <Textarea v-model="messageValue" label="Сообщение" placeholder="Напишите..." hint="Максимум 500" />
+                <Textarea v-model="errorTextarea" label="С ошибкой" placeholder="Введите..." error="Слишком коротко" />
             </div>
         </section>
 
-        <!-- ЧЕКБОКСЫ И РАДИО -->
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">Выбор</h2>
 
             <h3 class="ui-showcase__subheading">Чекбоксы</h3>
             <div class="ui-showcase__row">
-                <Checkbox v-model="check1" label="Согласен с условиями" />
-                <Checkbox v-model="check2" label="Получать рассылку" />
+                <Checkbox v-model="check1" label="Согласен" />
+                <Checkbox v-model="check2" label="Рассылка" />
                 <Checkbox v-model="check3" label="Отключен" disabled />
             </div>
 
@@ -126,64 +74,54 @@
                 <Radio v-model="radioValue" value="fullstack" name="role" label="Fullstack" />
                 <Radio v-model="radioValue" value="devops" name="role" label="DevOps" />
             </div>
-            <p class="ui-showcase__output">
-                Выбрано: <strong>{{ radioValue }}</strong>
-            </p>
+            <p class="ui-showcase__output">Выбрано: <strong>{{ radioValue }}</strong></p>
         </section>
 
-        <!-- СВИТЧИ -->
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">Свитчи</h2>
             <div class="ui-showcase__row">
-                <Switch v-model="switch1" label="Обычный свитч" />
+                <Switch v-model="switch1" label="Обычный" />
                 <Switch v-model="switch2" label="Включен" />
                 <Switch v-model="switch3" label="Отключен" disabled />
             </div>
         </section>
 
-        <!-- ИТОГОВОЕ СОСТОЯНИЕ -->
-        <section class="ui-showcase__section">
-            <h2 class="ui-showcase__heading">Состояние компонентов</h2>
-            <pre class="ui-showcase__state">{{ stateString }}</pre>
-        </section>
-        <!-- СТЕКЛЯННЫЕ КАРТОЧКИ -->
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">GlassCard</h2>
 
             <h3 class="ui-showcase__subheading">Без акцента</h3>
             <div class="ui-showcase__grid">
                 <GlassCard>
-                    <h4>Обычная карточка</h4>
-                    <p>Это стеклянная карточка с базовым hover-эффектом.</p>
+                    <h4>Обычная</h4>
+                    <p>Стеклянная карточка.</p>
                 </GlassCard>
                 <GlassCard :hoverable="false">
                     <h4>Без hover</h4>
-                    <p>Эта карточка не поднимается при наведении.</p>
+                    <p>Не поднимается.</p>
                 </GlassCard>
             </div>
 
-            <h3 class="ui-showcase__subheading">С неоновым акцентом</h3>
+            <h3 class="ui-showcase__subheading">С акцентом</h3>
             <div class="ui-showcase__grid">
                 <GlassCard accent="var(--neon-blue)">
-                    <h4>Синий акцент</h4>
-                    <p>Карточка с синим неоном.</p>
+                    <h4>Синий</h4>
+                    <p>Акцент синий.</p>
                 </GlassCard>
                 <GlassCard accent="var(--neon-pink)">
-                    <h4>Розовый акцент</h4>
-                    <p>Карточка с розовым неоном.</p>
+                    <h4>Розовый</h4>
+                    <p>Акцент розовый.</p>
                 </GlassCard>
                 <GlassCard accent="var(--neon-green)">
-                    <h4>Зелёный акцент</h4>
-                    <p>Карточка с зелёным неоном.</p>
+                    <h4>Зелёный</h4>
+                    <p>Акцент зелёный.</p>
                 </GlassCard>
                 <GlassCard accent="var(--neon-yellow)">
-                    <h4>Жёлтый акцент</h4>
-                    <p>Карточка с жёлтым неоном.</p>
+                    <h4>Жёлтый</h4>
+                    <p>Акцент жёлтый.</p>
                 </GlassCard>
             </div>
         </section>
 
-        <!-- ТЕГИ -->
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">Tag</h2>
 
@@ -209,8 +147,13 @@
             <div class="ui-showcase__row">
                 <Tag size="sm" variant="neon-blue">SM</Tag>
                 <Tag size="md" variant="neon-blue">MD</Tag>
-                <Tag variant="neon-pink" clickable @click="onTagClick">Кликабельный</Tag>
+                <Tag variant="neon-pink" clickable>Кликабельный</Tag>
             </div>
+        </section>
+
+        <section class="ui-showcase__section">
+            <h2 class="ui-showcase__heading">Состояние</h2>
+            <pre class="ui-showcase__state">{{ stateString }}</pre>
         </section>
     </div>
 </template>
@@ -260,13 +203,9 @@ const stateString = computed(() =>
         2
     )
 );
-const onTagClick = () => {
-    console.log('Tag clicked!');
-};
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
 .ui-showcase {
@@ -283,7 +222,6 @@ const onTagClick = () => {
 
 .ui-showcase__subtitle {
     color: var(--text-secondary);
-    font-size: var(--font-body);
     margin-bottom: var(--gap-lg);
 }
 
@@ -299,7 +237,6 @@ const onTagClick = () => {
 .ui-showcase__heading {
     font-size: var(--font-h2);
     margin-bottom: var(--gap-sm);
-    color: var(--text-main);
 }
 
 .ui-showcase__subheading {
@@ -331,9 +268,7 @@ const onTagClick = () => {
     font-size: var(--font-small);
     margin-top: var(--gap-sm);
 
-    strong {
-        color: var(--neon-blue);
-    }
+    strong { color: var(--neon-blue); }
 }
 
 .ui-showcase__state {

@@ -1,16 +1,14 @@
 <template>
-    <div class="input-wrapper" :class="{ 'input-wrapper--error': hasError }">
-        <label v-if="label" :for="inputId" class="input-wrapper__label">
-            {{ label }}
-        </label>
+    <div class="input" :class="{ 'input--error': !!error }">
+        <label v-if="label" :for="id" class="input__label">{{ label }}</label>
 
-        <div class="input-wrapper__field" :class="fieldClasses">
-            <span v-if="iconLeft" class="input-wrapper__icon input-wrapper__icon--left">
+        <div class="input__field" :class="fieldClasses">
+            <span v-if="iconLeft" class="input__icon input__icon--left">
                 <component :is="iconLeft" />
             </span>
 
             <input
-                :id="inputId"
+                :id="id"
                 ref="inputRef"
                 :type="actualType"
                 :value="modelValue"
@@ -18,18 +16,18 @@
                 :disabled="disabled"
                 :readonly="readonly"
                 :autocomplete="autocomplete"
-                :aria-invalid="hasError"
+                :aria-invalid="!!error"
                 :aria-describedby="describedBy"
-                class="input-wrapper__input"
+                class="input__control"
                 @input="onInput"
-                @focus="onFocus"
-                @blur="onBlur"
+                @focus="isFocused = true"
+                @blur="isFocused = false"
             />
 
             <button
                 v-if="clearable && modelValue && !disabled"
                 type="button"
-                class="input-wrapper__action"
+                class="input__action"
                 aria-label="Очистить"
                 @click="onClear"
             >
@@ -42,20 +40,12 @@
             <button
                 v-if="type === 'password'"
                 type="button"
-                class="input-wrapper__action"
+                class="input__action"
                 :aria-label="showPassword ? 'Скрыть пароль' : 'Показать пароль'"
                 @click="showPassword = !showPassword"
             >
-                <svg
-                    v-if="showPassword"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path
-                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
-                    />
+                <svg v-if="showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
                     <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
                 <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -64,20 +54,13 @@
                 </svg>
             </button>
 
-            <span
-                v-if="iconRight && !clearable"
-                class="input-wrapper__icon input-wrapper__icon--right"
-            >
+            <span v-if="iconRight && !clearable" class="input__icon input__icon--right">
                 <component :is="iconRight" />
             </span>
         </div>
 
-        <p v-if="hasError" :id="`${inputId}-error`" class="input-wrapper__error">
-            {{ error }}
-        </p>
-        <p v-else-if="hint" :id="`${inputId}-hint`" class="input-wrapper__hint">
-            {{ hint }}
-        </p>
+        <p v-if="error" :id="`${id}-error`" class="input__error">{{ error }}</p>
+        <p v-else-if="hint" :id="`${id}-hint`" class="input__hint">{{ hint }}</p>
     </div>
 </template>
 
@@ -115,51 +98,31 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string | number): void;
-    (e: 'focus', event: FocusEvent): void;
-    (e: 'blur', event: FocusEvent): void;
     (e: 'clear'): void;
 }>();
 
-const inputId = `input-${useId()}`;
+const id = `input-${useId()}`;
 const inputRef = ref<HTMLInputElement | null>(null);
 const showPassword = ref(false);
 const isFocused = ref(false);
 
-const hasError = computed(() => !!props.error);
+const actualType = computed(() =>
+    props.type === 'password' && showPassword.value ? 'text' : props.type
+);
 
-const actualType = computed(() => {
-    if (props.type === 'password') {
-        return showPassword.value ? 'text' : 'password';
-    }
-    return props.type;
-});
-
-const describedBy = computed(() => {
-    if (hasError.value) return `${inputId}-error`;
-    if (props.hint) return `${inputId}-hint`;
-    return undefined;
-});
+const describedBy = computed(() =>
+    props.error ? `${id}-error` : props.hint ? `${id}-hint` : undefined
+);
 
 const fieldClasses = computed(() => ({
-    'input-wrapper__field--focused': isFocused.value,
-    'input-wrapper__field--disabled': props.disabled,
-    'input-wrapper__field--error': hasError.value,
+    'input__field--focused': isFocused.value,
+    'input__field--disabled': props.disabled,
+    'input__field--error': !!props.error,
 }));
 
-const onInput = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const value = props.type === 'number' ? Number(target.value) : target.value;
-    emit('update:modelValue', value);
-};
-
-const onFocus = (event: FocusEvent) => {
-    isFocused.value = true;
-    emit('focus', event);
-};
-
-const onBlur = (event: FocusEvent) => {
-    isFocused.value = false;
-    emit('blur', event);
+const onInput = (e: Event) => {
+    const t = e.target as HTMLInputElement;
+    emit('update:modelValue', props.type === 'number' ? Number(t.value) : t.value);
 };
 
 const onClear = () => {
@@ -172,24 +135,22 @@ defineExpose({ focus: () => inputRef.value?.focus() });
 </script>
 
 <style lang="scss" scoped>
-@use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-.input-wrapper {
+.input {
     display: flex;
     flex-direction: column;
     gap: var(--gap-sm);
     width: 100%;
 }
 
-.input-wrapper__label {
+.input__label {
     font-size: var(--font-small);
     font-weight: 500;
     color: var(--text-secondary);
-    transition: color var(--transition-theme);
 }
 
-.input-wrapper__field {
+.input__field {
     position: relative;
     display: flex;
     align-items: center;
@@ -198,58 +159,53 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     border-radius: var(--radius-md);
     transition: all var(--transition-base);
 
-    // Светлая тема — плотный белый фон
     body:not(.dark-theme) & {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid var(--border-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
 
-    // Тёмная тема — стекло
     body.dark-theme & {
         background: var(--glass-bg);
         backdrop-filter: var(--glass-blur);
         border: 1px solid var(--glass-border);
     }
 
-    &:hover:not(.input-wrapper__field--disabled) {
+    &:hover:not(.input__field--disabled) {
         border-color: var(--neon-blue);
     }
 }
 
-.input-wrapper__field--focused {
+.input__field--focused {
     border-color: var(--neon-blue) !important;
 
     body:not(.dark-theme) & {
-        box-shadow:
-            0 0 0 4px rgba(0, 212, 255, 0.15),
-            0 2px 4px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.02);
     }
 
     body.dark-theme & {
-        box-shadow:
-            0 0 20px rgba(0, 212, 255, 0.2),
-            inset 0 0 15px rgba(0, 212, 255, 0.05);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.2), inset 0 0 15px rgba(0, 212, 255, 0.05);
     }
 }
 
-.input-wrapper__field--error {
+.input__field--error {
     border-color: var(--neon-red) !important;
 
     body:not(.dark-theme) & {
         box-shadow: 0 0 0 4px rgba(255, 59, 92, 0.15);
     }
+
     body.dark-theme & {
         box-shadow: 0 0 20px rgba(255, 59, 92, 0.2);
     }
 }
 
-.input-wrapper__field--disabled {
+.input__field--disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.input-wrapper__input {
+.input__control {
     flex: 1;
     width: 100%;
     padding: 12px 16px;
@@ -258,7 +214,6 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     outline: none;
     font-size: var(--font-body);
     color: var(--text-main);
-    font-family: inherit;
 
     &::placeholder {
         color: var(--text-tertiary);
@@ -269,7 +224,7 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     }
 }
 
-.input-wrapper__icon {
+.input__icon {
     @include flex(row, center, center);
     flex-shrink: 0;
     width: 20px;
@@ -284,21 +239,14 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     }
 }
 
-.input-wrapper__icon--left {
-    margin-left: 16px;
-    margin-right: 8px;
-}
+.input__icon--left { margin-left: 16px; margin-right: 8px; }
+.input__icon--right { margin-right: 16px; margin-left: 8px; }
 
-.input-wrapper__icon--right {
-    margin-right: 16px;
-    margin-left: 8px;
-}
-
-.input-wrapper__field--focused .input-wrapper__icon {
+.input__field--focused .input__icon {
     color: var(--neon-blue);
 }
 
-.input-wrapper__action {
+.input__action {
     @include flex(row, center, center);
     @include focus-ring;
 
@@ -322,19 +270,19 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     }
 }
 
-.input-wrapper__error {
+.input__error {
     font-size: var(--font-small);
     color: var(--neon-red);
     margin: 0;
 }
 
-.input-wrapper__hint {
+.input__hint {
     font-size: var(--font-small);
     color: var(--text-tertiary);
     margin: 0;
 }
 
-.input-wrapper--error .input-wrapper__label {
+.input--error .input__label {
     color: var(--neon-red);
 }
 </style>
