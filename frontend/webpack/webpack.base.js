@@ -43,7 +43,13 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: path.resolve(__dirname, '../public/favicon.ico'), to: 'favicon.ico' },
+                {
+                    from: path.resolve(__dirname, '../public'),
+                    to: path.resolve(__dirname, '../dist'),
+                    globOptions: {
+                        ignore: ['**/index.html'],
+                    },
+                },
             ],
         }),
         new webpack.DefinePlugin({
