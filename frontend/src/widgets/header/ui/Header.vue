@@ -171,7 +171,7 @@ onUnmounted(() => {
     }
 }
 
-.header__burger {
+.header__burger.burger {
     display: none;
 
     @include respond-down(tablet) {
