@@ -3,7 +3,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 type ThemeMode = 'light' | 'dark' | 'auto';
 type Resolved = 'light' | 'dark';
 
-const KEY = 'portfolioTheme';
+const KEY = '   ';
 
 const mode = ref<ThemeMode>('auto');
 const systemDark = ref(false);
