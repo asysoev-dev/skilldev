@@ -2,30 +2,32 @@
     <header class="header">
         <div class="container header__inner">
             <RouterLink to="/" class="header__logo">
-                <span class="header__logo-text">myskill</span>DEV<span class="header__logo-dot"
-                    >.</span
-                >
+                <span class="header__logo-text">myskill</span>DEV<span class="header__logo-dot">.</span>
             </RouterLink>
 
-            <nav class="header__nav">
-                <RouterLink
-                    v-for="link in links"
-                    :key="link.to"
-                    :to="link.to"
-                    class="header__nav-link"
-                >
-                    {{ t(link.label) }}
-                </RouterLink>
-            </nav>
-
             <div class="header__right">
-                <LangSwitcher class="header__lang" />
-                <BurgerButton
-                    class="header__burger"
-                    :open="drawerOpen"
-                    @click="drawerOpen = !drawerOpen"
-                />
+                <nav class="header__nav">
+                    <RouterLink
+                        v-for="link in links"
+                        :key="link.to"
+                        :to="link.to"
+                        class="header__nav-link"
+                    >
+                        {{ t(link.label) }}
+                    </RouterLink>
+                </nav>
+
+                <div ref="settingsRef" class="header__settings">
+                    <SettingsButton :open="settingsOpen" @click="toggleSettings" />
+                    <SettingsPopover :open="settingsOpen" />
+                </div>
             </div>
+
+            <BurgerButton
+                class="header__burger"
+                :open="drawerOpen"
+                @click="drawerOpen = !drawerOpen"
+            />
         </div>
 
         <MobileDrawer v-model:open="drawerOpen" />
@@ -33,21 +35,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { BurgerButton } from '@features/burger-button';
-import { LangSwitcher } from '@features/lang-switcher';
+import { SettingsButton, SettingsPopover } from '@features/settings-popover';
 import { MobileDrawer } from '@widgets/mobile-drawer';
 import { useI18n } from '@shared/lib/useI18n';
 
 const { t } = useI18n();
 const drawerOpen = ref(false);
+const settingsOpen = ref(false);
+const settingsRef = ref<HTMLElement | null>(null);
 
 const links = [
     { to: '/', label: 'nav.home' },
     { to: '/auth', label: 'nav.auth' },
     { to: '/dashboard', label: 'nav.dashboard' },
 ];
+
+const toggleSettings = () => {
+    settingsOpen.value = !settingsOpen.value;
+};
+
+const onClickOutside = (e: MouseEvent) => {
+    if (!settingsOpen.value) return;
+    if (settingsRef.value && !settingsRef.value.contains(e.target as Node)) {
+        settingsOpen.value = false;
+    }
+};
+
+const onEsc = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') settingsOpen.value = false;
+};
+
+onMounted(() => {
+    document.addEventListener('click', onClickOutside);
+    document.addEventListener('keydown', onEsc);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', onClickOutside);
+    document.removeEventListener('keydown', onEsc);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -66,7 +95,6 @@ const links = [
 
 .header__inner {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: var(--gap-md);
 }
@@ -81,13 +109,20 @@ const links = [
 }
 
 .header__logo-text {
-    font-size: var(--font-small);
+    font-size: var(--font-body);
     padding-right: 2px;
-    color: var(--text-secondary);
+    color: var(--neon-blue);
 }
 
 .header__logo-dot {
     color: var(--neon-blue);
+}
+
+.header__right {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xl);
+    margin-left: auto;
 }
 
 .header__nav {
@@ -110,7 +145,7 @@ const links = [
         color: var(--text-main);
     }
 
-    &.router-link-active {
+    &.router-link-exact-active {
         color: var(--neon-blue);
 
         &::after {
@@ -126,13 +161,9 @@ const links = [
     }
 }
 
-.header__right {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-sm);
-}
+.header__settings {
+    position: relative;
 
-.header__lang {
     @include respond-down(tablet) {
         display: none;
     }
