@@ -44,6 +44,7 @@
     --gap-sm: 8px;
     --gap-md: 16px;
     --gap-lg: 24px;
+    --gap-xl: 40px;
 
     // Типографика
     --font-h1: clamp(28px, 6vw, 56px);
@@ -100,6 +101,7 @@ body.dark-theme {
         --card-padding: 24px;
         --gap-md: 20px;
         --gap-lg: 32px;
+        --gap-xl: 48px;
     }
 }
 
@@ -110,6 +112,7 @@ body.dark-theme {
         --card-padding: 30px;
         --gap-md: 24px;
         --gap-lg: 40px;
+        --gap-xl: 56px;
     }
 }
 

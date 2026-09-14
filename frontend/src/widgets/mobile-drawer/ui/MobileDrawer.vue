@@ -1,7 +1,7 @@
 <template>
     <Teleport v-if="open" to="body">
         <Transition name="drawer">
-            <div class="drawer" role="dialog" aria-modal="true" @click.self="close">
+            <div v-if="open" class="drawer" role="dialog" aria-modal="true" @click.self="close">
                 <aside class="drawer__panel">
                     <header class="drawer__header">
                         <RouterLink to="/" class="drawer__logo" @click="close">
@@ -26,9 +26,15 @@
                     </nav>
 
                     <div class="drawer__controls">
-                        <ThemeSwitcher />
-                        <ParallaxToggle />
-                        <LangSwitcher />
+                        <div class="drawer__control">
+                            <span class="drawer__control-label">{{ t('controls.theme') }}</span>
+                            <Switch :model-value="isDark" @update:model-value="toggleTheme" />
+                        </div>
+
+                        <div class="drawer__control">
+                            <span class="drawer__control-label">{{ t('controls.lang') }}</span>
+                            <LangSwitcher />
+                        </div>
                     </div>
                 </aside>
             </div>
@@ -40,10 +46,10 @@
 import { watch, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { BurgerButton } from '@features/burger-button';
-import { ThemeSwitcher } from '@features/theme-switcher';
-import { ParallaxToggle } from '@features/parallax-toggle';
 import { LangSwitcher } from '@features/lang-switcher';
+import { useTheme } from '@shared/lib/useTheme';
 import { useI18n } from '@shared/lib/useI18n';
+import Switch from '@shared/ui/Switch/Switch.vue';
 
 interface Props {
     open: boolean;
@@ -53,6 +59,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{ (e: 'update:open', value: boolean): void }>();
 
 const { t } = useI18n();
+const { isDark, toggleTheme } = useTheme();
 
 const links = [
     { to: '/', label: 'nav.home' },
@@ -95,11 +102,18 @@ onUnmounted(() => {
     width: min(320px, 85vw);
     padding: 20px;
     gap: var(--gap-lg);
-    background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     border-right: var(--glass-border);
     overflow-y: auto;
+
+    body:not(.dark-theme) & {
+        background: rgba(255, 255, 255, 0.92);
+    }
+
+    body.dark-theme & {
+        background: rgba(8, 8, 12, 0.85);
+    }
 }
 
 .drawer__header {
@@ -117,9 +131,9 @@ onUnmounted(() => {
 }
 
 .drawer__logo-text {
-    font-size: var(--font-small);
+    font-size: var(--font-body);
     padding-right: 2px;
-    color: var(--text-secondary);
+    color: var(--neon-blue);
 }
 
 .drawer__logo-dot {
@@ -146,18 +160,33 @@ onUnmounted(() => {
         color: var(--text-main);
     }
 
-    &.router-link-active {
+    &.router-link-exact-active {
         color: var(--neon-blue);
         background: rgba(0, 212, 255, 0.08);
     }
 }
 
 .drawer__controls {
-    @include flex(column, flex-start);
+    display: flex;
+    flex-direction: column;
     gap: var(--gap-md);
     margin-top: auto;
     padding-top: var(--gap-lg);
     border-top: 1px solid var(--footer-border);
+}
+
+.drawer__control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-md);
+}
+
+.drawer__control-label {
+    font-size: var(--font-small);
+    font-weight: 500;
+    color: var(--text-main);
+    white-space: nowrap;
 }
 
 .drawer-enter-active,
