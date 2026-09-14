@@ -2,13 +2,14 @@
     <section class="hero">
         <div class="hero__content">
             <h1 class="hero__title">
-                <span class="hero__title-accent">Frontend</span><span class="hero__title-dash">-</span>разработчик
+                <span class="hero__title-accent">Frontend</span
+                ><span class="hero__title-dash">-</span>разработчик
             </h1>
 
             <p class="hero__subtitle">
-                Привет! Меня зовут Алексей. <br>
-                5+ лет опыта в коммерческой разработке. Пишу на Vue 3 и
-                TypeScript, бэкенд — на Node.js. Работал над B2B-системами, IoT и e-commerce.
+                Привет! Меня зовут Алексей. <br />
+                5+ лет опыта в коммерческой разработке. Пишу на Vue 3 и TypeScript, бэкенд — на
+                Node.js. Работал над B2B-системами, IoT и e-commerce.
             </p>
 
             <div class="hero__badges">

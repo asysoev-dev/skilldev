@@ -5,14 +5,12 @@
         :aria-label="`Switch to ${lang === 'ru' ? 'English' : 'Russian'}`"
         @click="toggleLang"
     >
-        <span
-            class="lang-switcher__item"
-            :class="{ 'lang-switcher__item--active': lang === 'ru' }"
-        >RU</span>
-        <span
-            class="lang-switcher__item"
-            :class="{ 'lang-switcher__item--active': lang === 'en' }"
-        >EN</span>
+        <span class="lang-switcher__item" :class="{ 'lang-switcher__item--active': lang === 'ru' }"
+            >RU</span
+        >
+        <span class="lang-switcher__item" :class="{ 'lang-switcher__item--active': lang === 'en' }"
+            >EN</span
+        >
     </button>
 </template>
 

@@ -87,12 +87,16 @@ const emit = defineEmits<{ (e: 'update:modelValue', value: boolean): void }>();
     background: #9ca3af;
     transition: all var(--transition-base);
 
-    body.dark-theme & { background: #777; }
+    body.dark-theme & {
+        background: #777;
+    }
 }
 
 .switch__input:checked + .switch__slider {
     background: rgba(0, 212, 255, 0.4);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2), inset 0 0 15px rgba(0, 212, 255, 0.1);
+    box-shadow:
+        0 0 15px rgba(0, 212, 255, 0.2),
+        inset 0 0 15px rgba(0, 212, 255, 0.1);
 }
 
 .switch__input:checked + .switch__slider .switch__thumb {

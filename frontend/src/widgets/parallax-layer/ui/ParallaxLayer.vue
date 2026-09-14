@@ -55,7 +55,9 @@ const starStyle = (star: Star) => ({
     position: absolute;
     border-radius: 50%;
     will-change: transform;
-    transition: background var(--transition-theme), box-shadow var(--transition-theme);
+    transition:
+        background var(--transition-theme),
+        box-shadow var(--transition-theme);
 }
 
 .parallax-layer__planet--big {
@@ -83,7 +85,9 @@ const starStyle = (star: Star) => ({
     opacity: var(--star-opacity);
     box-shadow: var(--star-shadow);
     will-change: transform;
-    transition: opacity var(--transition-theme), background var(--transition-theme);
+    transition:
+        opacity var(--transition-theme),
+        background var(--transition-theme);
 }
 
 @media (max-width: 768px) {

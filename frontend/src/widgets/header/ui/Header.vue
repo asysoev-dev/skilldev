@@ -2,7 +2,9 @@
     <header class="header">
         <div class="container header__inner">
             <RouterLink to="/" class="header__logo">
-                <span class="header__logo-text">myskill</span>DEV<span class="header__logo-dot">.</span>
+                <span class="header__logo-text">myskill</span>DEV<span class="header__logo-dot"
+                    >.</span
+                >
             </RouterLink>
 
             <div class="header__right">

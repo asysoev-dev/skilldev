@@ -2,21 +2,33 @@
 
 @mixin respond($bp) {
     @if $bp == mobile {
-        @media (min-width: $breakpoint-mobile) { @content; }
+        @media (min-width: $breakpoint-mobile) {
+            @content;
+        }
     } @else if $bp == tablet {
-        @media (min-width: $breakpoint-tablet) { @content; }
+        @media (min-width: $breakpoint-tablet) {
+            @content;
+        }
     } @else if $bp == desktop {
-        @media (min-width: $breakpoint-desktop) { @content; }
+        @media (min-width: $breakpoint-desktop) {
+            @content;
+        }
     } @else if $bp == wide {
-        @media (min-width: $breakpoint-wide) { @content; }
+        @media (min-width: $breakpoint-wide) {
+            @content;
+        }
     }
 }
 
 @mixin respond-down($bp) {
     @if $bp == tablet {
-        @media (max-width: ($breakpoint-tablet - 1px)) { @content; }
+        @media (max-width: ($breakpoint-tablet - 1px)) {
+            @content;
+        }
     } @else if $bp == desktop {
-        @media (max-width: ($breakpoint-desktop - 1px)) { @content; }
+        @media (max-width: ($breakpoint-desktop - 1px)) {
+            @content;
+        }
     }
 }
 

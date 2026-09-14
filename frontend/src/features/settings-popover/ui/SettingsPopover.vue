@@ -95,7 +95,9 @@ const { t } = useI18n();
 
 .popover-enter-active,
 .popover-leave-active {
-    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    transition:
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
 }
 
 .popover-enter-from,

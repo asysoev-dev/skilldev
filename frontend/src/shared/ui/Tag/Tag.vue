@@ -20,8 +20,16 @@ import { computed } from 'vue';
 import type { Component } from 'vue';
 
 type Variant =
-    | 'default' | 'primary' | 'success' | 'danger' | 'warning'
-    | 'neon-blue' | 'neon-pink' | 'neon-yellow' | 'neon-green' | 'neon-purple';
+    | 'default'
+    | 'primary'
+    | 'success'
+    | 'danger'
+    | 'warning'
+    | 'neon-blue'
+    | 'neon-pink'
+    | 'neon-yellow'
+    | 'neon-green'
+    | 'neon-purple';
 
 type Size = 'sm' | 'md';
 
@@ -70,8 +78,14 @@ const onClick = (e: Event) => props.clickable && emit('click', e);
     font-family: inherit;
 }
 
-.tag--sm { padding: 2px 8px; font-size: var(--font-tiny); }
-.tag--md { padding: 4px 10px; font-size: var(--font-small); }
+.tag--sm {
+    padding: 2px 8px;
+    font-size: var(--font-tiny);
+}
+.tag--md {
+    padding: 4px 10px;
+    font-size: var(--font-small);
+}
 
 .tag__icon {
     @include flex(row, center, center);
@@ -79,7 +93,10 @@ const onClick = (e: Event) => props.clickable && emit('click', e);
     width: 14px;
     height: 14px;
 
-    :deep(svg) { width: 100%; height: 100%; }
+    :deep(svg) {
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .tag--default {
@@ -89,16 +106,52 @@ const onClick = (e: Event) => props.clickable && emit('click', e);
     backdrop-filter: var(--glass-blur);
 }
 
-.tag--primary  { background: rgba(0, 212, 255, 0.15);  border-color: rgba(0, 212, 255, 0.4);  color: var(--neon-blue); }
-.tag--success  { background: rgba(0, 255, 171, 0.15);  border-color: rgba(0, 255, 171, 0.4);  color: var(--neon-green); }
-.tag--danger   { background: rgba(255, 59, 92, 0.15);  border-color: rgba(255, 59, 92, 0.4);  color: var(--neon-red); }
-.tag--warning  { background: rgba(255, 215, 0, 0.15);  border-color: rgba(255, 215, 0, 0.4);  color: var(--neon-yellow); }
+.tag--primary {
+    background: rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.4);
+    color: var(--neon-blue);
+}
+.tag--success {
+    background: rgba(0, 255, 171, 0.15);
+    border-color: rgba(0, 255, 171, 0.4);
+    color: var(--neon-green);
+}
+.tag--danger {
+    background: rgba(255, 59, 92, 0.15);
+    border-color: rgba(255, 59, 92, 0.4);
+    color: var(--neon-red);
+}
+.tag--warning {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: rgba(255, 215, 0, 0.4);
+    color: var(--neon-yellow);
+}
 
-.tag--neon-blue   { background: rgba(0, 212, 255, 0.1);   border-color: rgba(0, 212, 255, 0.35);   color: var(--neon-blue); }
-.tag--neon-pink   { background: rgba(255, 45, 149, 0.1);  border-color: rgba(255, 45, 149, 0.35);  color: var(--neon-pink); }
-.tag--neon-yellow { background: rgba(255, 215, 0, 0.1);   border-color: rgba(255, 215, 0, 0.35);   color: var(--neon-yellow); }
-.tag--neon-green  { background: rgba(0, 255, 171, 0.1);   border-color: rgba(0, 255, 171, 0.35);   color: var(--neon-green); }
-.tag--neon-purple { background: rgba(138, 43, 226, 0.1);  border-color: rgba(138, 43, 226, 0.35);  color: var(--neon-purple); }
+.tag--neon-blue {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.35);
+    color: var(--neon-blue);
+}
+.tag--neon-pink {
+    background: rgba(255, 45, 149, 0.1);
+    border-color: rgba(255, 45, 149, 0.35);
+    color: var(--neon-pink);
+}
+.tag--neon-yellow {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.35);
+    color: var(--neon-yellow);
+}
+.tag--neon-green {
+    background: rgba(0, 255, 171, 0.1);
+    border-color: rgba(0, 255, 171, 0.35);
+    color: var(--neon-green);
+}
+.tag--neon-purple {
+    background: rgba(138, 43, 226, 0.1);
+    border-color: rgba(138, 43, 226, 0.35);
+    color: var(--neon-purple);
+}
 
 .tag--clickable {
     cursor: pointer;

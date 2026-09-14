@@ -9,7 +9,14 @@
     >
         <span v-if="loading" class="button__spinner">
             <svg class="button__spinner-icon" viewBox="0 0 50 50">
-                <circle class="button__spinner-path" cx="25" cy="25" r="20" fill="none" stroke-width="4" />
+                <circle
+                    class="button__spinner-path"
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                    stroke-width="4"
+                />
             </svg>
         </span>
 
@@ -32,9 +39,15 @@ import { computed } from 'vue';
 import type { Component } from 'vue';
 
 type Variant =
-    | 'primary' | 'secondary' | 'outline' | 'ghost' | 'text'
-    | 'primary-action' | 'danger-action'
-    | 'outline-primary-action' | 'outline-danger-action';
+    | 'primary'
+    | 'secondary'
+    | 'outline'
+    | 'ghost'
+    | 'text'
+    | 'primary-action'
+    | 'danger-action'
+    | 'outline-primary-action'
+    | 'outline-danger-action';
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type Type = 'button' | 'submit' | 'reset';
 
@@ -155,13 +168,24 @@ const handleClick = (e: MouseEvent) => {
 }
 
 @keyframes spin {
-    100% { transform: rotate(360deg); }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes dash {
-    0%   { stroke-dasharray: 1, 150;  stroke-dashoffset: 0; }
-    50%  { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
-    100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
 }
 
 .button--primary {
@@ -263,13 +287,36 @@ const handleClick = (e: MouseEvent) => {
     }
 }
 
-.button--xs { padding: 6px 12px;  min-height: 32px; font-size: var(--font-small); border-radius: var(--radius-sm); }
-.button--sm { padding: 8px 16px;  min-height: 36px; font-size: var(--font-small); }
-.button--md { padding: 12px 24px; min-height: 44px; font-size: var(--font-body); }
-.button--lg { padding: 14px 32px; min-height: 52px; font-size: 18px; }
-.button--xl { padding: 18px 40px; min-height: 60px; font-size: 20px; }
+.button--xs {
+    padding: 6px 12px;
+    min-height: 32px;
+    font-size: var(--font-small);
+    border-radius: var(--radius-sm);
+}
+.button--sm {
+    padding: 8px 16px;
+    min-height: 36px;
+    font-size: var(--font-small);
+}
+.button--md {
+    padding: 12px 24px;
+    min-height: 44px;
+    font-size: var(--font-body);
+}
+.button--lg {
+    padding: 14px 32px;
+    min-height: 52px;
+    font-size: 18px;
+}
+.button--xl {
+    padding: 18px 40px;
+    min-height: 60px;
+    font-size: 20px;
+}
 
-.button--full-width { width: 100%; }
+.button--full-width {
+    width: 100%;
+}
 
 .button--full-width-mobile {
     width: 100%;

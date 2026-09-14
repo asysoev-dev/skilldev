@@ -57,7 +57,9 @@ const emit = defineEmits<{ (e: 'click'): void }>();
 .settings-button__icon {
     width: 20px;
     height: 20px;
-    transition: transform var(--transition-base), color var(--transition-base);
+    transition:
+        transform var(--transition-base),
+        color var(--transition-base);
 }
 
 .settings-button--active .settings-button__icon {

@@ -56,9 +56,15 @@ const onClick = (e: Event) => props.clickable && emit('click', e);
     overflow: hidden;
 }
 
-.glass-card--padding-sm { padding: var(--gap-md); }
-.glass-card--padding-md { padding: var(--card-padding); }
-.glass-card--padding-lg { padding: calc(var(--card-padding) * 1.5); }
+.glass-card--padding-sm {
+    padding: var(--gap-md);
+}
+.glass-card--padding-md {
+    padding: var(--card-padding);
+}
+.glass-card--padding-lg {
+    padding: calc(var(--card-padding) * 1.5);
+}
 
 .glass-card--hoverable:hover {
     transform: translateY(-4px);

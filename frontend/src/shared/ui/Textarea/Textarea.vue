@@ -110,15 +110,23 @@ defineExpose({ focus: () => textareaRef.value?.focus() });
 .textarea__field--focused {
     border-color: var(--neon-blue) !important;
 
-    body:not(.dark-theme) & { box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15); }
-    body.dark-theme & { box-shadow: 0 0 20px rgba(0, 212, 255, 0.2); }
+    body:not(.dark-theme) & {
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
+    }
+    body.dark-theme & {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    }
 }
 
 .textarea__field--error {
     border-color: var(--neon-red) !important;
 
-    body:not(.dark-theme) & { box-shadow: 0 0 0 4px rgba(255, 59, 92, 0.15); }
-    body.dark-theme & { box-shadow: 0 0 20px rgba(255, 59, 92, 0.2); }
+    body:not(.dark-theme) & {
+        box-shadow: 0 0 0 4px rgba(255, 59, 92, 0.15);
+    }
+    body.dark-theme & {
+        box-shadow: 0 0 20px rgba(255, 59, 92, 0.2);
+    }
 }
 
 .textarea__field--disabled {

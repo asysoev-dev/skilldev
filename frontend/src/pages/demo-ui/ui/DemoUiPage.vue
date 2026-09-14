@@ -44,17 +44,53 @@
             <h2 class="ui-showcase__heading">Поля ввода</h2>
 
             <div class="ui-showcase__grid">
-                <Input v-model="textValue" label="Обычный" placeholder="Введите текст..." hint="Подсказка" />
-                <Input v-model="emailValue" type="email" label="Email" placeholder="mail@example.com" />
-                <Input v-model="passwordValue" type="password" label="Пароль" placeholder="••••••••" />
-                <Input v-model="searchValue" type="search" label="Поиск" placeholder="Что искать?" clearable />
-                <Input v-model="errorValue" label="С ошибкой" placeholder="Введите..." error="Обязательное поле" />
+                <Input
+                    v-model="textValue"
+                    label="Обычный"
+                    placeholder="Введите текст..."
+                    hint="Подсказка"
+                />
+                <Input
+                    v-model="emailValue"
+                    type="email"
+                    label="Email"
+                    placeholder="mail@example.com"
+                />
+                <Input
+                    v-model="passwordValue"
+                    type="password"
+                    label="Пароль"
+                    placeholder="••••••••"
+                />
+                <Input
+                    v-model="searchValue"
+                    type="search"
+                    label="Поиск"
+                    placeholder="Что искать?"
+                    clearable
+                />
+                <Input
+                    v-model="errorValue"
+                    label="С ошибкой"
+                    placeholder="Введите..."
+                    error="Обязательное поле"
+                />
                 <Input v-model="disabledValue" label="Отключен" placeholder="Нельзя" disabled />
             </div>
 
             <div class="ui-showcase__grid">
-                <Textarea v-model="messageValue" label="Сообщение" placeholder="Напишите..." hint="Максимум 500" />
-                <Textarea v-model="errorTextarea" label="С ошибкой" placeholder="Введите..." error="Слишком коротко" />
+                <Textarea
+                    v-model="messageValue"
+                    label="Сообщение"
+                    placeholder="Напишите..."
+                    hint="Максимум 500"
+                />
+                <Textarea
+                    v-model="errorTextarea"
+                    label="С ошибкой"
+                    placeholder="Введите..."
+                    error="Слишком коротко"
+                />
             </div>
         </section>
 
@@ -74,7 +110,9 @@
                 <Radio v-model="radioValue" value="fullstack" name="role" label="Fullstack" />
                 <Radio v-model="radioValue" value="devops" name="role" label="DevOps" />
             </div>
-            <p class="ui-showcase__output">Выбрано: <strong>{{ radioValue }}</strong></p>
+            <p class="ui-showcase__output">
+                Выбрано: <strong>{{ radioValue }}</strong>
+            </p>
         </section>
 
         <section class="ui-showcase__section">
@@ -268,7 +306,9 @@ const stateString = computed(() =>
     font-size: var(--font-small);
     margin-top: var(--gap-sm);
 
-    strong { color: var(--neon-blue); }
+    strong {
+        color: var(--neon-blue);
+    }
 }
 
 .ui-showcase__state {
