@@ -1,4 +1,4 @@
-import './preload';
+import "./preload";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -9,6 +9,8 @@ import { logger } from "./utils/logger";
 import { CORS_OPTIONS, RATE_LIMIT_OPTIONS } from "./utils/constants";
 
 import authRoutes from "./routes/auth.routes";
+import leadRoutes from "./routes/lead.routes";
+import analyticsRoutes from './routes/analytics.routes';
 
 export const prisma = new PrismaClient();
 
@@ -22,20 +24,15 @@ app.use(express.urlencoded({ extended: true }));
 
 const limiter = rateLimit(RATE_LIMIT_OPTIONS);
 
-app.use("/api/", limiter);
-app.use("/api/auth", authRoutes);
+app.use('/api/', limiter);
+app.use('/api/auth', authRoutes);
+app.use('/api/leads', leadRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
-app.use(
-  (
-    err: any,
-    // req: express.Request,
-    res: express.Response,
-    // next: express.NextFunction,
-  ) => {
-    logger.error(err.stack);
-    res.status(500).json({ error: "Something went wrong!" });
-  },
-);
+app.use((err: any, res: express.Response) => {
+  logger.error(err.stack);
+  res.status(500).json({ error: "Something went wrong!" });
+});
 
 const startServer = async () => {
   try {
