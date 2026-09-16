@@ -12,6 +12,9 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "keywords": [
     "express",
     "jwt",
