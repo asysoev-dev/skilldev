@@ -1,7 +1,7 @@
 <template>
-    <Teleport to="body">
+    <Teleport v-if="visible" to="body">
         <Transition name="banner">
-            <div v-if="visible" class="tour-banner">
+            <div class="tour-banner">
                 <div class="tour-banner__content">
                     <strong class="tour-banner__title">Хочешь быстрый тур?</strong>
                     <span class="tour-banner__text"> Покажу за 6 шагов, что здесь есть. </span>

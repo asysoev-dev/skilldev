@@ -1,7 +1,7 @@
 <template>
-    <Teleport to="body">
+    <Teleport v-if="visible" to="body">
         <Transition name="banner">
-            <div v-if="visible" class="mobile-notice">
+            <div class="mobile-notice">
                 <div class="mobile-notice__content">
                     <strong class="mobile-notice__title">Вы находитесь в мобильной версии</strong>
                     <span class="mobile-notice__text">
