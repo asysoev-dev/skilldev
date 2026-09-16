@@ -1,5 +1,5 @@
 <template>
-    <section class="skill-grid">
+    <section class="skill-grid tour__step-sixth">
         <h2 class="skill-grid__title">Демо-стенды</h2>
         <p class="skill-grid__subtitle">Мои скиллы — в живом коде.</p>
 
