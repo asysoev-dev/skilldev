@@ -1,24 +1,29 @@
 <template>
-    <Transition name="popover">
-        <div v-if="open" class="settings-popover" role="dialog" aria-label="Настройки">
-            <div class="settings-popover__arrow" />
-
-            <div class="settings-popover__item">
-                <span class="settings-popover__label">{{ t('controls.theme') }}</span>
-                <Switch :model-value="isDark" @update:model-value="toggleTheme" />
-            </div>
-
-            <div v-if="canRun" class="settings-popover__item">
-                <span class="settings-popover__label">{{ t('controls.parallax') }}</span>
-                <Switch :model-value="enabled" @update:model-value="toggle" />
-            </div>
-
-            <div class="settings-popover__item">
-                <span class="settings-popover__label">{{ t('controls.lang') }}</span>
-                <LangSwitcher />
-            </div>
+    <div v-if="open" class="settings-popover" role="dialog" aria-label="Настройки">
+        <div class="settings-popover__item">
+            <span class="settings-popover__label">{{ t('controls.theme') }}</span>
+            <Switch
+                class="tour__step-third"
+                :model-value="isDark"
+                @update:model-value="toggleTheme"
+            />
         </div>
-    </Transition>
+
+        <div v-if="canRun" class="settings-popover__item">
+            <span class="settings-popover__label">{{ t('controls.parallax') }}</span>
+            <Switch
+                class="tour__step-fourth"
+                :disabled="!isDark"
+                :model-value="enabled"
+                @update:model-value="toggle"
+            />
+        </div>
+
+        <div class="settings-popover__item">
+            <span class="settings-popover__label">{{ t('controls.lang') }}</span>
+            <LangSwitcher class="tour__step-fifth" />
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -57,19 +62,6 @@ const { t } = useI18n();
     display: flex;
     flex-direction: column;
     gap: 4px;
-}
-
-.settings-popover__arrow {
-    position: absolute;
-    top: -6px;
-    right: 16px;
-    width: 12px;
-    height: 12px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    border-top: var(--glass-border);
-    border-left: var(--glass-border);
-    transform: rotate(45deg);
 }
 
 .settings-popover__item {

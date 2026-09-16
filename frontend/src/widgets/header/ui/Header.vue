@@ -19,9 +19,9 @@
                     </RouterLink>
                 </nav>
 
-                <div ref="settingsRef" class="header__settings">
-                    <SettingsButton :open="settingsOpen" @click="toggleSettings" />
-                    <SettingsPopover :open="settingsOpen" />
+                <div class="header__settings">
+                    <SettingsButton :open="isOpen" @click="settings.toggle()" />
+                    <SettingsPopover :open="isOpen" />
                 </div>
             </div>
 
@@ -43,11 +43,14 @@ import { BurgerButton } from '@features/burger-button';
 import { SettingsButton, SettingsPopover } from '@features/settings-popover';
 import { MobileDrawer } from '@widgets/mobile-drawer';
 import { useI18n } from '@shared/lib/useI18n';
+import { storeToRefs } from 'pinia';
+import { useSettingsPopover } from '@shared/lib/useSettingsPopover';
 
 const { t } = useI18n();
+const settings = useSettingsPopover();
+const { isOpen } = storeToRefs(settings);
+
 const drawerOpen = ref(false);
-const settingsOpen = ref(false);
-const settingsRef = ref<HTMLElement | null>(null);
 
 const links = [
     { to: '/', label: 'nav.home' },
@@ -55,19 +58,24 @@ const links = [
     { to: '/dashboard', label: 'nav.dashboard' },
 ];
 
-const toggleSettings = () => {
-    settingsOpen.value = !settingsOpen.value;
-};
-
 const onClickOutside = (e: MouseEvent) => {
-    if (!settingsOpen.value) return;
-    if (settingsRef.value && !settingsRef.value.contains(e.target as Node)) {
-        settingsOpen.value = false;
+    if (!isOpen.value) return;
+
+    const target = e.target as HTMLElement;
+    if (
+        target.closest('.header__settings') ||
+        target.closest('.settings-popover') ||
+        target.closest('.tour') ||
+        target.closest('.tour-banner')
+    ) {
+        return;
     }
+
+    settings.close();
 };
 
 const onEsc = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') settingsOpen.value = false;
+    if (e.key === 'Escape') settings.close();
 };
 
 onMounted(() => {
