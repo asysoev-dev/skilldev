@@ -1,7 +1,7 @@
 <template>
     <section class="hero">
         <div class="hero__content">
-            <h1 class="hero__title">
+            <h1 class="hero__title tour__step-first">
                 <span class="hero__title-accent">Frontend</span
                 ><span class="hero__title-dash">-</span>разработчик
             </h1>
@@ -24,15 +24,17 @@
             </div>
 
             <div class="hero__actions">
-                <Button variant="primary" size="lg" @click="onTour">Тур по сайту</Button>
-                <Button variant="outline-primary-action" size="lg" @click="onDemo">Демо</Button>
+                <Button variant="outline-primary-action" size="lg" class="hero__tour-btn" @click="onTour"
+                    >Тур по сайту</Button
+                >
+                <Button variant="primary" size="lg" @click="onDemo">Демо</Button>
                 <Button variant="outline" size="lg" :icon-left="CodeBracketIcon" @click="onGithub">
                     GitHub
                 </Button>
             </div>
         </div>
 
-        <div class="hero__photo-wrapper">
+        <div class="hero__photo-wrapper tour__step-second">
             <img
                 src="/myfoto.jpg"
                 alt="Алексей Сысоев"
@@ -80,6 +82,12 @@ const onGithub = () =>
     }
 }
 
+.hero__tour-btn {
+    @include respond-down(tablet) {
+        display: none;
+    }
+}
+
 .hero__content {
     display: flex;
     flex-direction: column;
@@ -100,7 +108,7 @@ const onGithub = () =>
 }
 
 .hero__title-accent {
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+    background: linear-gradient(135deg, #00d4ff, #ff2d95);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
