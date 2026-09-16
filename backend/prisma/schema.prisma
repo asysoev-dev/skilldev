@@ -10,12 +10,13 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  password  String   // hashed with bcrypt
+  password  String
   name      String?
+  isDemo    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions  Session[]
+  sessions Session[]
 }
 
 model Session {
@@ -28,4 +29,51 @@ model Session {
 
   @@index([userId])
   @@index([refreshToken])
+}
+
+model Lead {
+  id         Int          @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  email      String       @unique
+  phone      String?
+  company    String
+  position   String
+  source     LeadSource
+  status     LeadStatus
+  manager    String
+  dealAmount Int          @default(0)
+  currency   String       @default("RUB")
+  city       String
+  industry   String
+  notes      String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  closedAt   DateTime?
+
+  @@index([status])
+  @@index([source])
+  @@index([manager])
+  @@index([createdAt])
+  @@index([industry])
+}
+
+enum LeadSource {
+  website
+  referral
+  cold_call
+  email
+  social
+  event
+  partner
+}
+
+enum LeadStatus {
+  new
+  contacted
+  qualified
+  proposal
+  negotiation
+  won
+  lost
 }
