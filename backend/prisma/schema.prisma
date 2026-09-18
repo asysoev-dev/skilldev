@@ -40,7 +40,8 @@ model Lead {
   company    String
   position   String
   source     LeadSource
-  status     LeadStatus
+  status       LeadStatus
+  statusOrder  Int        @default(0)
   manager    String
   dealAmount Int          @default(0)
   currency   String       @default("RUB")

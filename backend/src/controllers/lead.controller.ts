@@ -7,9 +7,13 @@ const SORTABLE = [
   "firstName",
   "lastName",
   "company",
+  "statusOrder",
+  "manager",
   "dealAmount",
+  "city",
   "createdAt",
 ] as const;
+
 type Sortable = (typeof SORTABLE)[number];
 
 export const getLeads = async (req: Request, res: Response): Promise<void> => {

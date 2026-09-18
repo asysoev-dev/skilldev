@@ -205,6 +205,16 @@ const translitMap: Record<string, string> = {
   я: "ya",
 };
 
+const STATUS_ORDER: Record<LeadStatus, number> = {
+  new: 1,
+  contacted: 2,
+  qualified: 3,
+  proposal: 4,
+  negotiation: 5,
+  won: 6,
+  lost: 7,
+};
+
 const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 const randomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
@@ -269,6 +279,7 @@ async function main() {
       position: pick(positions),
       source: pick(sources),
       status,
+      statusOrder: STATUS_ORDER[status],
       manager: pick(managers),
       dealAmount:
         status === "won"
