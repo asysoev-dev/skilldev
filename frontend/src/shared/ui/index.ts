@@ -6,6 +6,6 @@ export { default as Radio } from './Radio/Radio.vue';
 export { default as Switch } from './Switch/Switch.vue';
 export { default as GlassCard } from './GlassCard/GlassCard.vue';
 export { default as Tag } from './Tag/Tag.vue';
-
-export type { ButtonVariant, ButtonSize, ButtonType } from './Button/Button.vue';
-export type { TagVariant, TagSize } from './Tag/Tag.vue';
+export { default as SearchInput } from './SearchInput/SearchInput.vue';
+export { default as FilterDropdown } from './FilterDropdown/FilterDropdown.vue';
+export { default as Pagination } from './Pagination/Pagination.vue';
