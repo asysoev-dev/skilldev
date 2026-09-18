@@ -31,9 +31,19 @@ const getCssFiles = () => {
     return files.filter((f) => f.endsWith('.css')).map((f) => `/css/${f}`);
 };
 
+const getClientFile = () => {
+    const distDir = path.resolve(__dirname, 'dist');
+    if (!fs.existsSync(distDir)) return '/client.js';
+
+    const files = fs.readdirSync(distDir);
+    const clientFile = files.find((f) => f.startsWith('client.') && f.endsWith('.js'));
+    return clientFile ? `/${clientFile}` : '/client.js';
+};
+
 const template = (html, state) => {
     const cssFiles = getCssFiles();
     const cssLinks = cssFiles.map((f) => `<link rel="stylesheet" href="${f}">`).join('\n        ');
+    const clientFile = getClientFile();
 
     return `
     <!DOCTYPE html>
@@ -48,7 +58,7 @@ const template = (html, state) => {
     <body>
         <div id="app">${html}</div>
         <script>window.__INITIAL_STATE__ = ${state}</script>
-        <script src="/client.js"></script>
+        <script src="${clientFile}"></script>
     </body>
     </html>
     `;

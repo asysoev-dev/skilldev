@@ -9,7 +9,7 @@ module.exports = merge(baseConfig, {
     entry: './src/app/entry-client.ts',
     output: {
         path: path.resolve(__dirname, '../dist'),
-        filename: 'client.js',
+        filename: 'client.[contenthash:8].js',
         clean: true,
         publicPath: '/',
     },
