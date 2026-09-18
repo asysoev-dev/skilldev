@@ -14,6 +14,7 @@ module.exports = merge(baseConfig, {
     },
     devtool: 'eval-source-map',
     devServer: {
+        host: '0.0.0.0',
         port: 3005,
         hot: true,
         open: false,
@@ -24,16 +25,19 @@ module.exports = merge(baseConfig, {
                 errors: true,
             },
         },
+        proxy: [
+            {
+                context: ['/api'],
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+            },
+        ],
     },
     module: {
         rules: [
             {
                 test: /\.(css|scss|sass)$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ],
+                use: ['style-loader', 'css-loader', 'sass-loader'],
             },
         ],
     },
