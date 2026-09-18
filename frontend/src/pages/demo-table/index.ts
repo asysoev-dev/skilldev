@@ -1,0 +1,1 @@
+export { default as DemoTablePage } from './ui/DemoTablePage.vue';
