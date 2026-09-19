@@ -232,13 +232,14 @@ async function main() {
   console.log("Seeding database...");
 
   const demoPassword = await bcrypt.hash("demo123", 10);
-  await prisma.user.upsert({
+  const demoUser = await prisma.user.upsert({
     where: { email: "demo@skilldev.ru" },
     update: {},
     create: {
       email: "demo@skilldev.ru",
       password: demoPassword,
       name: "Демо-пользователь",
+      role: 'admin',
       isDemo: true,
     },
   });
@@ -271,6 +272,7 @@ async function main() {
     const createdAt = randomDate(365);
 
     leads.push({
+      createdById: demoUser.id,
       firstName,
       lastName,
       email,
