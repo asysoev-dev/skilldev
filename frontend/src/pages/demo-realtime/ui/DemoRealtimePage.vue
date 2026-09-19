@@ -19,14 +19,23 @@
             <div class="realtime__card">
                 <span class="realtime__card-label">Сейчас на сайте</span>
                 <span class="realtime__card-value">{{ onlineCount }}</span>
-                <span class="realtime__card-hint"> Открой вторую вкладку — счётчик вырастет. </span>
+                <span class="realtime__card-hint"> Открой вторую вкладку, либо используй смартфон — счётчик вырастет. </span>
+            </div>
+            <div class="realtime__card realtime__card--qr">
+                <span class="realtime__card-label">Ссылка для мобильной версии</span>
+                <div class="realtime__qr">
+                    <QrcodeVue :value="siteUrl" :size="140" level="M" render-as="svg" />
+                </div>
+                <span class="realtime__card-hint">
+                    Отсканируй QR-код — счётчик вырастет.
+                </span>
             </div>
         </div>
 
         <div class="realtime__section">
             <h2 class="realtime__section-title">Отправить уведомление</h2>
             <p class="realtime__section-text">
-                Кликни — уведомление придёт во все открытые вкладки этого сайта.
+                Его получат все открытые вкладки этого сайта.
             </p>
 
             <form class="realtime__form" @submit.prevent="send">
@@ -41,8 +50,15 @@
 import { ref } from 'vue';
 import { BackToStands, Input, Button } from '@shared/ui';
 import { useWebSocket } from '@shared/lib/useWebSocket';
+import { computed } from 'vue';
+import QrcodeVue from 'qrcode.vue';
 
 const { connected, onlineCount, sendNotification } = useWebSocket();
+
+const siteUrl = computed(() => {
+    if (typeof window === 'undefined') return '';
+    return window.location.origin + '/demo/realtime';
+});
 
 const text = ref('');
 
@@ -182,5 +198,19 @@ const send = () => {
         flex: 1;
         min-width: 200px;
     }
+}
+
+.realtime__card--qr {
+    align-items: center;
+    text-align: center;
+}
+
+.realtime__qr {
+    padding: 12px;
+    background: #fff;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

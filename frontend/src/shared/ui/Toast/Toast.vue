@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, watch, onMounted, onUnmounted } from 'vue';
 import {
     XMarkIcon,
     InformationCircleIcon,
@@ -39,7 +39,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     type: 'info',
-    duration: 4000,
+    duration: 3000,
 });
 
 const emit = defineEmits<{ (e: 'close'): void }>();
@@ -52,6 +52,26 @@ const iconComponent = computed(() => {
 });
 
 let timer: number | null = null;
+
+const clearTimer = () => {
+    if (timer) {
+        clearTimeout(timer);
+        timer = null;
+    }
+};
+
+watch(
+    () => props.visible,
+    (visible) => {
+        clearTimer();
+        if (visible && props.duration > 0) {
+            timer = window.setTimeout(() => emit('close'), props.duration);
+        }
+    },
+    { immediate: true }
+);
+
+onUnmounted(clearTimer);
 
 onMounted(() => {
     if (props.visible && props.duration > 0) {
@@ -101,10 +121,18 @@ onUnmounted(() => {
     }
 }
 
-.toast--info .toast__icon { color: var(--neon-blue); }
-.toast--success .toast__icon { color: var(--neon-green); }
-.toast--warning .toast__icon { color: var(--neon-yellow); }
-.toast--error .toast__icon { color: var(--neon-pink); }
+.toast--info .toast__icon {
+    color: var(--neon-blue);
+}
+.toast--success .toast__icon {
+    color: var(--neon-green);
+}
+.toast--warning .toast__icon {
+    color: var(--neon-yellow);
+}
+.toast--error .toast__icon {
+    color: var(--neon-pink);
+}
 
 .toast__icon {
     @include flex(row, center, center);
@@ -152,7 +180,9 @@ onUnmounted(() => {
 
 .toast-enter-active,
 .toast-leave-active {
-    transition: opacity var(--transition-base), transform var(--transition-base);
+    transition:
+        opacity var(--transition-base),
+        transform var(--transition-base);
 }
 
 .toast-enter-from,
