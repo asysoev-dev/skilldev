@@ -27,17 +27,34 @@ const getCssFiles = () => {
     const cssDir = path.resolve(__dirname, 'dist/css');
     if (!fs.existsSync(cssDir)) return [];
 
-    const files = fs.readdirSync(cssDir);
-    return files.filter((f) => f.endsWith('.css')).map((f) => `/css/${f}`);
+    const files = fs.readdirSync(cssDir).filter((f) => f.endsWith('.css'));
+
+    files.sort((a, b) => {
+        const aTime = fs.statSync(path.join(cssDir, a)).mtimeMs;
+        const bTime = fs.statSync(path.join(cssDir, b)).mtimeMs;
+        return bTime - aTime;
+    });
+
+    return files.map((f) => `/css/${f}`);
 };
 
 const getClientFile = () => {
     const distDir = path.resolve(__dirname, 'dist');
     if (!fs.existsSync(distDir)) return '/client.js';
 
-    const files = fs.readdirSync(distDir);
-    const clientFile = files.find((f) => f.startsWith('client.') && f.endsWith('.js'));
-    return clientFile ? `/${clientFile}` : '/client.js';
+    const files = fs
+        .readdirSync(distDir)
+        .filter((f) => f.startsWith('client.') && f.endsWith('.js'));
+
+    if (!files.length) return '/client.js';
+
+    files.sort((a, b) => {
+        const aTime = fs.statSync(path.join(distDir, a)).mtimeMs;
+        const bTime = fs.statSync(path.join(distDir, b)).mtimeMs;
+        return bTime - aTime;
+    });
+
+    return `/${files[0]}`;
 };
 
 const template = (html, state) => {

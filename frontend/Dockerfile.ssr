@@ -4,6 +4,8 @@ ARG CACHE_BUST=1
 
 WORKDIR /app
 
+RUN rm -rf /app/dist /app/dist-server
+
 COPY dist ./dist
 COPY dist-server ./dist-server
 COPY server.js ./
