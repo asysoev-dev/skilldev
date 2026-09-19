@@ -19,6 +19,11 @@
                     </RouterLink>
                 </nav>
 
+                <div class="header__online" :class="{ 'header__online--active': connected }">
+                    <span class="header__online-dot" />
+                    <span class="header__online-count">{{ onlineCount }}</span>
+                </div>
+
                 <div class="header__settings">
                     <SettingsButton :open="isOpen" @click="settings.toggle()" />
                     <SettingsPopover :open="isOpen" />
@@ -39,6 +44,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useWebSocket } from '@shared/lib/useWebSocket';
 import { BurgerButton } from '@features/burger-button';
 import { SettingsButton, SettingsPopover } from '@features/settings-popover';
 import { MobileDrawer } from '@widgets/mobile-drawer';
@@ -46,6 +52,7 @@ import { useI18n } from '@shared/lib/useI18n';
 import { storeToRefs } from 'pinia';
 import { useSettingsPopover } from '@shared/lib/useSettingsPopover';
 
+const { connected, onlineCount } = useWebSocket();
 const { t } = useI18n();
 const settings = useSettingsPopover();
 const { isOpen } = storeToRefs(settings);
@@ -185,5 +192,40 @@ onUnmounted(() => {
     @include respond-down(tablet) {
         display: flex;
     }
+}
+
+.header__online {
+    @include flex(row, center, center);
+
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--radius-full);
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    font-size: var(--font-tiny);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all var(--transition-base);
+
+    @include respond-down(tablet) {
+        display: none;
+    }
+}
+
+.header__online-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    transition: all var(--transition-base);
+}
+
+.header__online--active .header__online-dot {
+    background: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+}
+
+.header__online-count {
+    font-variant-numeric: tabular-nums;
 }
 </style>

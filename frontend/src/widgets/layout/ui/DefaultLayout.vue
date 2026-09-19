@@ -11,14 +11,19 @@
         </main>
 
         <Footer />
+        <ToastContainer />
     </div>
 </template>
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
+import { ToastContainer } from '@widgets/toast-container';
+import { useWebSocket } from '@shared/lib/useWebSocket';
 import { ParallaxLayer } from '@widgets/parallax-layer';
 import { Header } from '@widgets/header';
 import { Footer } from '@widgets/footer';
+
+useWebSocket();
 </script>
 
 <style lang="scss" scoped>

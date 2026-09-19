@@ -39,6 +39,11 @@ const routes: RouteRecordRaw[] = [
                 name: 'demo-charts',
                 component: () => import('@pages/demo-charts/ui/DemoChartsPage.vue'),
             },
+            {
+                path: 'demo/realtime',
+                name: 'demo-realtime',
+                component: () => import('@pages/demo-realtime/ui/DemoRealtimePage.vue'),
+            },
         ],
     },
 ];

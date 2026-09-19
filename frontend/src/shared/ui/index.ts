@@ -11,3 +11,4 @@ export { default as FilterDropdown } from './FilterDropdown/FilterDropdown.vue';
 export { default as Pagination } from './Pagination/Pagination.vue';
 export { default as BackToStands } from './BackToStands/BackToStands.vue';
 export { default as Modal } from './Modal/Modal.vue';
+export { default as Toast } from './Toast/Toast.vue';
