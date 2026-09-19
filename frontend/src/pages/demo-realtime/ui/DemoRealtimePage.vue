@@ -29,10 +29,10 @@
                 Кликни — уведомление придёт во все открытые вкладки этого сайта.
             </p>
 
-            <div class="realtime__form">
+            <form class="realtime__form" @submit.prevent="send">
                 <Input v-model="text" placeholder="Текст уведомления..." />
-                <Button variant="primary" :disabled="!text" @click="send">Отправить</Button>
-            </div>
+                <Button type="submit" variant="primary" :disabled="!text">Отправить</Button>
+            </form>
         </div>
     </div>
 </template>
