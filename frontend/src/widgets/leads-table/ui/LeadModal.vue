@@ -39,12 +39,12 @@
 
                         <div class="lead-modal__field">
                             <span class="lead-modal__label">Источник</span>
-                            <Tag :variant="sourceVariant" size="sm">{{ lead.source }}</Tag>
+                            <Tag :variant="sourceVariant" size="sm">{{ sourceLabels[lead.source] }}</Tag>
                         </div>
 
                         <div class="lead-modal__field">
                             <span class="lead-modal__label">Статус</span>
-                            <Tag :variant="statusVariant" size="sm">{{ lead.status }}</Tag>
+                            <Tag :variant="statusVariant" size="sm">{{ statusLabels[lead.status] }}</Tag>
                         </div>
 
                         <div class="lead-modal__field">
@@ -114,6 +114,26 @@ const statusVariant = computed<TagVariant>(() => {
     if (s === 'negotiation' || s === 'proposal') return 'neon-yellow';
     return 'neon-blue';
 });
+
+const statusLabels: Record<string, string> = {
+    new: 'Новый',
+    contacted: 'Связались',
+    qualified: 'Квалифицирован',
+    proposal: 'КП отправлено',
+    negotiation: 'Переговоры',
+    won: 'Сделка закрыта',
+    lost: 'Отказ',
+};
+
+const sourceLabels: Record<string, string> = {
+    website: 'Сайт',
+    referral: 'Рекомендация',
+    cold_call: 'Холодный звонок',
+    email: 'Email',
+    social: 'Соцсети',
+    event: 'Мероприятие',
+    partner: 'Партнёр',
+};
 
 const sourceVariant = computed<TagVariant>(() => {
     const map: Record<string, TagVariant> = {

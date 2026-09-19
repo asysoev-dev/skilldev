@@ -42,7 +42,7 @@
                         </td>
                         <td class="data-table__td">
                             <Tag :variant="statusVariant(lead.status)" size="sm">{{
-                                lead.status
+                                statusLabels[lead.status]
                             }}</Tag>
                         </td>
                         <td class="data-table__td">{{ lead.manager }}</td>
@@ -79,6 +79,16 @@ const columns = [
     { key: 'city', label: 'Город', sortable: true },
     { key: 'createdAt', label: 'Создан', sortable: true },
 ];
+
+const statusLabels: Record<string, string> = {
+    new: 'Новый',
+    contacted: 'Связались',
+    qualified: 'Квалифицирован',
+    proposal: 'КП отправлено',
+    negotiation: 'Переговоры',
+    won: 'Сделка закрыта',
+    lost: 'Отказ',
+};
 
 const statusVariant = (status: LeadStatus): TagVariant => {
     if (status === 'won') return 'neon-green';
