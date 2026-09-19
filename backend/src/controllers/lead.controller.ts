@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { Prisma } from "@prisma/client";
 import { prisma } from "../server";
+import { AuthRequest } from "../middleware/auth.middleware";
+
+import { Prisma, LeadStatus, LeadSource } from "@prisma/client";
 
 const SORTABLE = [
   "id",
@@ -15,6 +17,16 @@ const SORTABLE = [
 ] as const;
 
 type Sortable = (typeof SORTABLE)[number];
+
+const STATUS_ORDER: Record<LeadStatus, number> = {
+  new: 1,
+  contacted: 2,
+  qualified: 3,
+  proposal: 4,
+  negotiation: 5,
+  won: 6,
+  lost: 7,
+};
 
 export const getLeads = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -121,5 +133,149 @@ export const getFilters = async (
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch filters" });
+  }
+};
+
+const LEAD_FIELDS = [
+  "firstName",
+  "lastName",
+  "email",
+  "phone",
+  "company",
+  "position",
+  "source",
+  "status",
+  "manager",
+  "dealAmount",
+  "city",
+  "industry",
+  "notes",
+] as const;
+
+type LeadField = (typeof LEAD_FIELDS)[number];
+
+const pickLeadFields = (body: Record<string, unknown>) => {
+  const result: Partial<Record<LeadField, unknown>> = {};
+  for (const field of LEAD_FIELDS) {
+    if (body[field] !== undefined) result[field] = body[field];
+  }
+  return result;
+};
+
+export const createLead = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const data = pickLeadFields(req.body);
+    const required = [
+      "firstName",
+      "lastName",
+      "email",
+      "company",
+      "position",
+      "source",
+      "status",
+      "manager",
+      "city",
+      "industry",
+    ];
+
+    for (const field of required) {
+      if (!data[field as LeadField]) {
+        res.status(400).json({ error: `Field ${field} is required` });
+        return;
+      }
+    }
+
+    const existing = await prisma.lead.findUnique({
+      where: { email: data.email as string },
+    });
+    if (existing) {
+      res.status(400).json({ error: "Lead with this email already exists" });
+      return;
+    }
+
+    const status = data.status as LeadStatus;
+    const statusOrder = STATUS_ORDER[status] ?? 0;
+
+    const lead = await prisma.lead.create({
+      data: {
+        firstName: data.firstName as string,
+        lastName: data.lastName as string,
+        email: data.email as string,
+        phone: (data.phone as string) ?? null,
+        company: data.company as string,
+        position: data.position as string,
+        source: data.source as LeadSource,
+        status,
+        statusOrder,
+        manager: data.manager as string,
+        dealAmount: (data.dealAmount as number) ?? 0,
+        city: data.city as string,
+        industry: data.industry as string,
+        notes: (data.notes as string) ?? null,
+        createdById: req.user?.userId ?? null,
+      },
+    });
+
+    res.status(201).json(lead);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to create lead" });
+  }
+};
+
+export const updateLead = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const lead = await prisma.lead.findUnique({ where: { id } });
+
+    if (!lead) {
+      res.status(404).json({ error: "Lead not found" });
+      return;
+    }
+
+    const data = pickLeadFields(req.body) as Prisma.LeadUpdateInput & {
+      statusOrder?: number;
+    };
+
+    if (data.status) {
+      data.statusOrder = STATUS_ORDER[data.status as LeadStatus] ?? 0;
+    }
+
+    const updated = await prisma.lead.update({
+      where: { id },
+      data,
+    });
+
+    res.json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update lead" });
+  }
+};
+
+export const deleteLead = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const lead = await prisma.lead.findUnique({ where: { id } });
+
+    if (!lead) {
+      res.status(404).json({ error: "Lead not found" });
+      return;
+    }
+
+    await prisma.lead.delete({ where: { id } });
+    res.json({ message: "Lead deleted" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete lead" });
   }
 };
