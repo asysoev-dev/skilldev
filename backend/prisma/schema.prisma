@@ -12,11 +12,13 @@ model User {
   email     String   @unique
   password  String
   name      String?
+  role      Role     @default(user)
   isDemo    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   sessions Session[]
+  leads    Lead[]
 }
 
 model Session {
@@ -32,31 +34,39 @@ model Session {
 }
 
 model Lead {
-  id         Int          @id @default(autoincrement())
-  firstName  String
-  lastName   String
-  email      String       @unique
-  phone      String?
-  company    String
-  position   String
-  source     LeadSource
-  status       LeadStatus
-  statusOrder  Int        @default(0)
-  manager    String
-  dealAmount Int          @default(0)
-  currency   String       @default("RUB")
-  city       String
-  industry   String
-  notes      String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  closedAt   DateTime?
+  id          Int          @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String       @unique
+  phone       String?
+  company     String
+  position    String
+  source      LeadSource
+  status      LeadStatus
+  statusOrder Int          @default(0)
+  manager     String
+  dealAmount  Int          @default(0)
+  currency    String       @default("RUB")
+  city        String
+  industry    String
+  notes       String?
+  createdById Int?
+  createdBy   User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  closedAt    DateTime?
 
   @@index([status])
   @@index([source])
   @@index([manager])
   @@index([createdAt])
   @@index([industry])
+  @@index([createdById])
+}
+
+enum Role {
+  user
+  admin
 }
 
 enum LeadSource {
