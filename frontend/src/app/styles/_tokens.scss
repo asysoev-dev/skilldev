@@ -47,7 +47,7 @@
 
     // Отступы (mobile-first)
     --container-padding: 16px;
-    --section-spacing: 48px;
+    --section-spacing: 8px;
     --card-padding: 20px;
     --gap-sm: 8px;
     --gap-md: 16px;
@@ -113,7 +113,7 @@ body.dark-theme {
 @media (min-width: 768px) {
     :root {
         --container-padding: 24px;
-        --section-spacing: 64px;
+        --section-spacing: 14px;
         --card-padding: 24px;
         --gap-md: 20px;
         --gap-lg: 32px;
@@ -124,7 +124,7 @@ body.dark-theme {
 @media (min-width: 1024px) {
     :root {
         --container-padding: 32px;
-        --section-spacing: 80px;
+        --section-spacing: 20px;
         --card-padding: 30px;
         --gap-md: 24px;
         --gap-lg: 40px;

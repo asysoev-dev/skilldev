@@ -1,5 +1,6 @@
 <template>
     <div class="demo-table">
+        <BackToStands />
         <header class="demo-table__header">
             <div>
                 <h1 class="demo-table__title">Data Table</h1>
@@ -76,6 +77,7 @@ import { Button, SearchInput, FilterDropdown, Pagination } from '@shared/ui';
 import { DataTable, LeadModal } from '@widgets/leads-table';
 import { useLeadStore } from '@entities/lead';
 import type { LeadStatus } from '@shared/api/leads.api';
+import { BackToStands } from '@shared/ui';
 
 const store = useLeadStore();
 

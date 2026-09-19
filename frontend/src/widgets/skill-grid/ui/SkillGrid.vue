@@ -1,5 +1,5 @@
 <template>
-    <section class="skill-grid tour__step-sixth">
+    <section id="skills" class="skill-grid tour__step-sixth">
         <h2 class="skill-grid__title">Демо-стенды</h2>
         <p class="skill-grid__subtitle">Мои скиллы — в живом коде.</p>
 
@@ -19,6 +19,7 @@ import { skills } from '../model/skills';
 
 .skill-grid {
     padding: var(--section-spacing) 0;
+    scroll-margin-top: 80px;
 }
 
 .skill-grid__title {

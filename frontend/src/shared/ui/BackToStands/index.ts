@@ -1,0 +1,1 @@
+export { default as BackToStands } from './BackToStands.vue';

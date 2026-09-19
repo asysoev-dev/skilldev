@@ -1,13 +1,12 @@
 <template>
     <div class="demo-charts">
+        <BackToStands />
         <header class="demo-charts__header">
             <h1 class="demo-charts__title">Charts</h1>
             <p class="demo-charts__subtitle">
                 Аналитика по лидам: динамика, источники, воронка, конверсия.
             </p>
         </header>
-
-        <div class="demo-charts__notice">Все данные вымышленные. Совпадения случайны.</div>
 
         <div v-if="store.loading" class="demo-charts__loading">Загрузка графиков…</div>
 
@@ -30,6 +29,7 @@
 import { onMounted } from 'vue';
 import { useAnalyticsStore } from '@entities/lead';
 import { TimelineChart, SourcesChart, FunnelChart, ManagersChart } from '@widgets/lead-charts';
+import { BackToStands } from '@shared/ui';
 
 const store = useAnalyticsStore();
 

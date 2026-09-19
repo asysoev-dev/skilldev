@@ -9,3 +9,4 @@ export { default as Tag } from './Tag/Tag.vue';
 export { default as SearchInput } from './SearchInput/SearchInput.vue';
 export { default as FilterDropdown } from './FilterDropdown/FilterDropdown.vue';
 export { default as Pagination } from './Pagination/Pagination.vue';
+export { default as BackToStands } from './BackToStands/BackToStands.vue';
