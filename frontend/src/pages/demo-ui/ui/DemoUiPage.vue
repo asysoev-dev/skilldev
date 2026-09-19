@@ -1,7 +1,8 @@
 <template>
     <div class="ui-showcase">
-        <h1 class="ui-showcase__title">UI-кит: витрина</h1>
-        <p class="ui-showcase__subtitle">Временная страница для проверки компонентов.</p>
+        <BackToStands />
+        <h1 class="ui-showcase__title">UI-кит</h1>
+        <div class="ui-showcase__subtitle">Страница для проверки компонентов.</div>
 
         <section class="ui-showcase__section">
             <h2 class="ui-showcase__heading">Кнопки</h2>
@@ -206,6 +207,7 @@ import Radio from '@/shared/ui/Radio/Radio.vue';
 import Switch from '@/shared/ui/Switch/Switch.vue';
 import GlassCard from '@/shared/ui/GlassCard/GlassCard.vue';
 import Tag from '@/shared/ui/Tag/Tag.vue';
+import { BackToStands } from '@shared/ui';
 
 const textValue = ref('Привет, мир!');
 const emailValue = ref('');
@@ -260,7 +262,7 @@ const stateString = computed(() =>
 
 .ui-showcase__subtitle {
     color: var(--text-secondary);
-    margin-bottom: var(--gap-lg);
+    // margin-bottom: var(--gap-lg);
 }
 
 .ui-showcase__section {

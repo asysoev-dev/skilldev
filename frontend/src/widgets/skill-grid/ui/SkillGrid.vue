@@ -1,17 +1,54 @@
 <template>
-    <section id="skills" class="skill-grid tour__step-sixth">
+    <section id="skills" class="skill-grid">
         <h2 class="skill-grid__title">Демо-стенды</h2>
-        <p class="skill-grid__subtitle">Мои скиллы — в живом коде.</p>
+        <p class="skill-grid__subtitle">Мой стек — в живом коде.</p>
 
         <div class="skill-grid__container">
-            <SkillCard v-for="skill in skills" :key="skill.id" :skill="skill" />
+            <SkillCard
+                v-for="skill in skills"
+                :key="skill.id"
+                :skill="skill"
+                @click="openModal(skill)"
+            />
         </div>
+
+        <FrontendDemo :open="activeModal === 'frontend'" @close="closeModal" />
+        <FullstackDemo :open="activeModal === 'fullstack'" @close="closeModal" />
+        <DevOpsDemo :open="activeModal === 'devops'" @close="closeModal" />
+        <SSRDemo :open="activeModal === 'ssr'" @close="closeModal" />
+        <UIKitDemo :open="activeModal === 'ui-kit'" @close="closeModal" />
     </section>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import SkillCard from './SkillCard.vue';
-import { skills } from '../model/skills';
+import { skills, type Skill } from '../model/skills';
+import {
+    FrontendDemo,
+    FullstackDemo,
+    DevOpsDemo,
+    SSRDemo,
+    UIKitDemo,
+} from '@features/demo-modal';
+
+const router = useRouter();
+const activeModal = ref<string | null>(null);
+
+const MODAL_IDS = ['frontend', 'fullstack', 'devops', 'ssr', 'ui-kit'];
+
+const openModal = (skill: Skill) => {
+    if (MODAL_IDS.includes(skill.id)) {
+        activeModal.value = skill.id;
+        return;
+    }
+    router.push(skill.to);
+};
+
+const closeModal = () => {
+    activeModal.value = null;
+};
 </script>
 
 <style lang="scss" scoped>

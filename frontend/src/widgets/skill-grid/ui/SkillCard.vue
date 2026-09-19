@@ -1,5 +1,5 @@
 <template>
-    <RouterLink :to="skill.to" class="skill-card-link">
+    <div class="skill-card-link" @click="emit('click')">
         <GlassCard :accent="skill.color" class="skill-card">
             <div class="skill-card__icon" :style="{ color: skill.color }">
                 <component :is="skill.icon" />
@@ -10,11 +10,10 @@
 
             <span class="skill-card__arrow" aria-hidden="true">→</span>
         </GlassCard>
-    </RouterLink>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import type { Skill } from '../model/skills';
 import { GlassCard } from '@shared/ui';
 
@@ -23,6 +22,8 @@ interface Props {
 }
 
 defineProps<Props>();
+
+const emit = defineEmits<{ (e: 'click'): void }>();
 </script>
 
 <style lang="scss" scoped>
