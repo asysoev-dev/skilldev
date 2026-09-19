@@ -31,6 +31,12 @@ module.exports = merge(baseConfig, {
                 target: 'http://localhost:3001',
                 changeOrigin: true,
             },
+            {
+                context: ['/socket.io'],
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+                ws: true,
+            },
         ],
     },
     module: {

@@ -54,7 +54,7 @@ export const skills: Skill[] = [
     },
     {
         id: 'realtime',
-        title: 'Real-time',
+        title: 'WebSocket',
         description: 'WebSocket, socket.io, online-юзеры',
         icon: BoltIcon,
         color: 'var(--neon-yellow)',
