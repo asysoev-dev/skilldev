@@ -19,7 +19,11 @@
                     </RouterLink>
                 </nav>
 
-                <div class="header__online" :class="{ 'header__online--active': connected }">
+                <div
+                    v-if="showCounter"
+                    class="header__online"
+                    :class="{ 'header__online--active': connected }"
+                >
                     <span class="header__online-dot" />
                     <span class="header__online-count">{{ onlineCount }}</span>
                 </div>
@@ -58,6 +62,12 @@ const settings = useSettingsPopover();
 const { isOpen } = storeToRefs(settings);
 
 const drawerOpen = ref(false);
+
+const showCounter = ref(false);
+
+onMounted(() => {
+    showCounter.value = true;
+});
 
 const links = [
     { to: '/', label: 'nav.home' },
