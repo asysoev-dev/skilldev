@@ -67,25 +67,35 @@ export function createRouter() {
         },
     });
 
-    router.beforeEach((to, from, next) => {
-        if (typeof window === 'undefined') {
-            next();
-            return;
-        }
+    router.beforeEach(async (to) => {
+        if (typeof window === 'undefined') return true;
 
         const userStore = useUserStore();
 
-        if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-            next('/auth');
-            return;
+        if (to.meta.requiresAuth) {
+            if (userStore.isAuthenticated) return true;
+
+            // тихо пробуем refresh
+            try {
+                const { authApi } = await import('@shared/api/auth.api');
+                const { data } = await authApi.refresh();
+                userStore.setToken(data.accessToken);
+
+                const { data: user } = await authApi.getMe();
+                userStore.setUser(user as any);
+                userStore.setHydrated();
+                return true;
+            } catch {
+                userStore.logout();
+                return { path: '/auth' };
+            }
         }
 
         if (to.path === '/auth' && userStore.isAuthenticated) {
-            next('/dashboard');
-            return;
+            return { path: '/dashboard' };
         }
 
-        next();
+        return true;
     });
 
     return router;

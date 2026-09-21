@@ -4,13 +4,10 @@ import { useUserStore } from '@entities/user';
 import { authApi } from '@shared/api/auth.api';
 import type { LoginCredentials, RegisterData } from '@shared/api/auth.api';
 
-interface ApiError {
-    response?: {
-        data?: {
-            error?: string;
-        };
-    };
-}
+const extractError = (err: unknown, fallback: string): string => {
+    const apiError = err as { response?: { data?: { error?: string } } };
+    return apiError.response?.data?.error ?? fallback;
+};
 
 export const useAuth = () => {
     const router = useRouter();
@@ -18,70 +15,49 @@ export const useAuth = () => {
     const isLoading = ref(false);
     const error = ref<string | null>(null);
 
-    /**
-     * Логин пользователя
-     *
-     * @param {LoginCredentials} credentials - email и пароль
-     * @returns {Promise<boolean>} true - успех, false - ошибка
-     * @description При успехе: сохраняет токен в store, редирект на /dashboard
-     */
-
     const login = async (credentials: LoginCredentials) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const { data: response } = await authApi.login(credentials);
-
-            userStore.setToken(response.accessToken);
-            userStore.setUser(response.user);
+            const { data } = await authApi.login(credentials);
+            userStore.setToken(data.accessToken);
+            userStore.setUser(data.user);
+            userStore.setHydrated();
+            localStorage.setItem('isAuthorized', 'true');
             await router.push('/dashboard');
             return true;
-        } catch (err: unknown) {
-            const apiError = err as ApiError;
-            error.value = apiError.response?.data?.error || 'Login failed';
+        } catch (err) {
+            error.value = extractError(err, 'Не удалось войти');
             return false;
         } finally {
             isLoading.value = false;
         }
     };
 
-    /**
-     * Регистрация пользователя
-     *
-     * @param {RegisterData} data - email, password, name
-     * @returns {Promise<boolean>} true - успех, false - ошибка
-     */
-
-    const register = async (data: RegisterData) => {
+    const register = async (payload: RegisterData) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const { data: response } = await authApi.register(data);
-
-            userStore.setToken(response.accessToken);
-            userStore.setUser(response.user);
+            const { data } = await authApi.register(payload);
+            userStore.setToken(data.accessToken);
+            userStore.setUser(data.user);
+            userStore.setHydrated();
+            localStorage.setItem('isAuthorized', '1');
             await router.push('/dashboard');
             return true;
-        } catch (err: unknown) {
-            const apiError = err as ApiError;
-            error.value = apiError.response?.data?.error || 'Registration failed';
+        } catch (err) {
+            error.value = extractError(err, 'Не удалось зарегистрироваться');
             return false;
         } finally {
             isLoading.value = false;
         }
     };
-
-    /**
-     * Выход из системы
-     *
-     * @returns {Promise<void>}
-     * @description Очищает сессию на сервере и в store, редирект на /auth
-     */
 
     const logout = async () => {
         isLoading.value = true;
         try {
             await authApi.logout();
+            localStorage.removeItem('isAuthorized');
         } catch (err) {
             console.error('Logout error:', err);
         } finally {
@@ -91,33 +67,26 @@ export const useAuth = () => {
         }
     };
 
-    /**
-     * Получение текущего access token
-     *
-     * @returns {string|null} Токен или null
-     */
-
     const getAccessToken = () => userStore.token;
 
-    /**
-     * Проверка авторизации с автоматическим обновлением токена
-     *
-     * @returns {Promise<boolean>} true - авторизован, false - нет
-     * @description Если токен есть - возвращает true, иначе пробует обновить через refresh
-     */
+    const checkAuth = async (): Promise<boolean> => {
+        if (userStore.isAuthenticated) return true;
 
-    const checkAuth = async () => {
-        if (userStore.token) {
-            return true;
+        if (typeof window !== 'undefined' && !localStorage.getItem('isAuthorized')) {
+            userStore.setHydrated();
+            return false;
         }
 
         try {
-            const { data } = await authApi.refresh();
-            userStore.setToken(data.accessToken);
-            const userData = await authApi.getMe();
-            userStore.setUser(userData.data);
+            const { data: refreshData } = await authApi.refresh();
+            userStore.setToken(refreshData.accessToken);
+
+            const { data: user } = await authApi.getMe();
+            userStore.setUser(user as unknown as { id: number; email: string; name: string });
+            userStore.setHydrated();
             return true;
         } catch {
+            localStorage.removeItem('isAuthorized');
             userStore.logout();
             return false;
         }

@@ -1,152 +1,269 @@
 <template>
-    <div class="auth-page">
-        <div class="auth-container">
-            <div class="auth-tabs">
-                <button :class="{ active: isLoginMode }" @click="isLoginMode = true">Login</button>
-                <button :class="{ active: !isLoginMode }" @click="isLoginMode = false">
-                    Register
-                </button>
-            </div>
+    <div class="auth">
+        <BackToStands />
 
-            <form @submit.prevent="handleSubmit" class="auth-form">
-                <div v-if="!isLoginMode" class="form-group">
-                    <label>Name</label>
-                    <input v-model="form.name" type="text" required />
+        <div class="auth__container">
+            <div class="auth__card">
+                <header class="auth__header">
+                    <h1 class="auth__title">
+                        {{ isLogin ? 'Вход' : 'Регистрация' }}
+                    </h1>
+                    <p class="auth__subtitle">
+                        {{
+                            isLogin
+                                ? 'Демо-доступ к админке портфолио'
+                                : 'Создай аккаунт для управления лидами'
+                        }}
+                    </p>
+                </header>
+
+                <div class="auth__tabs">
+                    <button
+                        type="button"
+                        class="auth__tab"
+                        :class="{ 'auth__tab--active': isLogin }"
+                        @click="isLogin = true"
+                    >
+                        Вход
+                    </button>
+                    <button
+                        type="button"
+                        class="auth__tab"
+                        :class="{ 'auth__tab--active': !isLogin }"
+                        @click="isLogin = false"
+                    >
+                        Регистрация
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input v-model="form.email" type="email" required />
+                <form class="auth__form" @submit.prevent="handleSubmit">
+                    <Input
+                        v-if="!isLogin"
+                        v-model="form.name"
+                        label="Имя"
+                        placeholder="Ваше имя"
+                        autocomplete="name"
+                    />
+
+                    <Input
+                        v-model="form.email"
+                        type="email"
+                        label="Email"
+                        placeholder="mail@example.com"
+                        autocomplete="email"
+                    />
+                    <Input
+                        v-model="form.password"
+                        type="password"
+                        label="Пароль"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                    />
+
+                    <p v-if="error" class="auth__error">{{ error }}</p>
+
+                    <Button type="submit" variant="primary" full-width :loading="isLoading">
+                        {{ isLogin ? 'Войти' : 'Зарегистрироваться' }}
+                    </Button>
+                </form>
+
+                <div class="auth__divider">
+                    <span>или</span>
                 </div>
 
-                <div class="form-group">
-                    <label>Password</label>
-                    <input v-model="form.password" type="password" required />
-                </div>
-
-                <div v-if="error" class="error-message">{{ error }}</div>
-
-                <button type="submit" :disabled="isLoading">
-                    {{ isLoading ? 'Loading...' : isLoginMode ? 'Login' : 'Register' }}
-                </button>
-                <button
-                    type="submit"
-                    :disabled="isLoading"
-                    style="margin-top: 0.5rem"
-                    @click="testLogin"
+                <Button
+                    variant="outline-primary-action"
+                    full-width
+                    :icon-left="SparklesIcon"
+                    :loading="isDemoLoading"
+                    @click="handleDemoLogin"
                 >
-                    {{ isLoading ? 'Loading...' : 'Test' }}
-                </button>
-            </form>
+                    Войти как демо-пользователь
+                </Button>
+
+                <p class="auth__hint">Демо-аккаунт с правами admin. Все данные вымышленные.</p>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
+import { SparklesIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from '@features/auth/model/useAuth';
+import { BackToStands, Button, Input } from '@shared/ui';
 
 const { login, register, isLoading, error } = useAuth();
-const isLoginMode = ref(true);
+
+const isLogin = ref(true);
+const isDemoLoading = ref(false);
 
 const form = reactive({
+    name: '',
     email: '',
     password: '',
-    name: '',
 });
 
 const handleSubmit = async () => {
-    if (isLoginMode.value) {
+    if (isLogin.value) {
         await login({ email: form.email, password: form.password });
     } else {
-        await register({ email: form.email, password: form.password, name: form.name });
+        await register({
+            email: form.email,
+            password: form.password,
+            name: form.name,
+        });
     }
 };
-const testLogin = async () => {
-    await login({ email: 'test@skilldev.ru', password: '123456' });
+
+const handleDemoLogin = async () => {
+    isDemoLoading.value = true;
+    try {
+        await login({
+            email: 'demo@skilldev.ru',
+            password: 'demo123',
+        });
+    } finally {
+        isDemoLoading.value = false;
+    }
 };
 </script>
 
 <style lang="scss" scoped>
 @use '@/app/styles/mixins' as *;
 
-.auth-page {
-    @include flex(row, center, center);
-    min-height: 80vh;
-}
-
-.auth-container {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    overflow: hidden;
-}
-
-.auth-tabs {
+.auth {
     display: flex;
-    border-bottom: 1px solid #e0e0e0;
+    flex-direction: column;
+    gap: var(--gap-lg);
+    padding: var(--section-spacing) 0;
 }
 
-.auth-tabs button {
+.auth__container {
+    display: flex;
+    justify-content: center;
+}
+
+.auth__card {
+    @include glass;
+
+    width: 100%;
+    max-width: 440px;
+    padding: var(--card-padding);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+}
+
+.auth__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    text-align: center;
+}
+
+.auth__title {
+    font-size: var(--font-h2);
+    font-weight: 600;
+    margin: 0;
+}
+
+.auth__subtitle {
+    font-size: var(--font-small);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.auth__tabs {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--border-color);
+}
+
+.auth__tab {
+    @include focus-ring;
+
     flex: 1;
-    padding: 1rem;
-    background: none;
+    padding: 10px;
+    background: transparent;
     border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.2s;
-}
-
-.auth-tabs button.active {
-    background: #42b983;
-    color: white;
-}
-
-.auth-form {
-    padding: 2rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: var(--font-small);
     font-weight: 500;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.error-message {
-    background: #fee;
-    color: #c33;
-    padding: 0.5rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-}
-
-button[type='submit'] {
-    width: 100%;
-    padding: 0.75rem;
-    background: #42b983;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    color: var(--text-secondary);
     cursor: pointer;
+    transition: all var(--transition-base);
+
+    &:hover {
+        color: var(--text-main);
+    }
 }
 
-button[type='submit']:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.auth__tab--active {
+    background: var(--neon-blue);
+    color: #08080c;
+
+    &:hover {
+        color: #08080c;
+    }
+}
+
+.auth__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+}
+
+.auth__error {
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 59, 92, 0.1);
+    border: 1px solid rgba(255, 59, 92, 0.3);
+    font-size: var(--font-small);
+    color: var(--neon-pink);
+    margin: 0;
+}
+
+.auth__divider {
+    position: relative;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: var(--font-tiny);
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 42%;
+        height: 1px;
+        background: var(--border-color);
+    }
+
+    &::before {
+        left: 0;
+    }
+    &::after {
+        right: 0;
+    }
+
+    span {
+        background: var(--bg-main);
+        padding: 0 12px;
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.auth__hint {
+    font-size: var(--font-tiny);
+    color: var(--text-tertiary);
+    margin: 0;
+    text-align: center;
 }
 </style>

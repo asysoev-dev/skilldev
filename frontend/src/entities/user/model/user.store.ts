@@ -1,11 +1,16 @@
 import { defineStore } from 'pinia';
 import type { User, AuthState } from './user.types';
 
+interface State extends AuthState {
+    hydrated: boolean;
+}
+
 export const useUserStore = defineStore('user', {
-    state: (): AuthState => ({
+    state: (): State => ({
         user: null,
         token: null,
         isAuthenticated: false,
+        hydrated: false,
     }),
 
     actions: {
@@ -19,12 +24,15 @@ export const useUserStore = defineStore('user', {
             this.isAuthenticated = true;
         },
 
+        setHydrated() {
+            this.hydrated = true;
+        },
+
         logout() {
             this.user = null;
             this.token = null;
             this.isAuthenticated = false;
+            this.hydrated = true;
         },
     },
-
-    getters: {},
 });
