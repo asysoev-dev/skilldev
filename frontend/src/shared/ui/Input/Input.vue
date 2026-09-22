@@ -20,8 +20,8 @@
                 :aria-describedby="describedBy"
                 class="input__control"
                 @input="onInput"
-                @focus="isFocused = true"
-                @blur="isFocused = false"
+                @focus="onFocus"
+                @blur="onBlur"
             />
 
             <button
@@ -67,8 +67,9 @@
             </span>
         </div>
 
-        <p v-if="error" :id="`${id}-error`" class="input__error">{{ error }}</p>
-        <p v-else-if="hint" :id="`${id}-hint`" class="input__hint">{{ hint }}</p>
+        <p class="input__message" :class="messageClass" :id="messageId">
+            {{ messageText || '\u00A0' }}
+        </p>
     </div>
 </template>
 
@@ -107,6 +108,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string | number): void;
     (e: 'clear'): void;
+    (e: 'blur', event: FocusEvent): void;
+    (e: 'focus', event: FocusEvent): void;
 }>();
 
 const id = `input-${useId()}`;
@@ -128,6 +131,21 @@ const fieldClasses = computed(() => ({
     'input__field--error': !!props.error,
 }));
 
+const messageText = computed(() => {
+    if (props.error) return props.error;
+    if (props.hint) return props.hint;
+    return '';
+});
+
+const messageClass = computed(() => ({
+    'input__message--error': !!props.error,
+    'input__message--hint': !props.error && !!props.hint,
+}));
+
+const messageId = computed(() =>
+    props.error ? `${id}-error` : props.hint ? `${id}-hint` : undefined
+);
+
 const onInput = (e: Event) => {
     const t = e.target as HTMLInputElement;
     emit('update:modelValue', props.type === 'number' ? Number(t.value) : t.value);
@@ -137,6 +155,16 @@ const onClear = () => {
     emit('update:modelValue', '');
     emit('clear');
     inputRef.value?.focus();
+};
+
+const onBlur = (event: FocusEvent) => {
+    isFocused.value = false;
+    emit('blur', event);
+};
+
+const onFocus = (event: FocusEvent) => {
+    isFocused.value = true;
+    emit('focus', event);
 };
 
 defineExpose({ focus: () => inputRef.value?.focus() });
@@ -228,7 +256,7 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     color: var(--text-main);
 
     &::placeholder {
-        color: var(--text-tertiary);
+        color: var(--text-placeholder);
     }
 
     &:disabled {
@@ -288,16 +316,20 @@ defineExpose({ focus: () => inputRef.value?.focus() });
     }
 }
 
-.input__error {
+.input__message {
+    min-height: 20px;
     font-size: var(--font-small);
-    color: var(--neon-red);
+    line-height: 1.4;
     margin: 0;
+    color: transparent;
 }
 
-.input__hint {
-    font-size: var(--font-small);
+.input__message--error {
+    color: var(--neon-pink);
+}
+
+.input__message--hint {
     color: var(--text-tertiary);
-    margin: 0;
 }
 
 .input--error .input__label {

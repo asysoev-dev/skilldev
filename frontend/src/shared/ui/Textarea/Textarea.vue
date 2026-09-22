@@ -14,13 +14,14 @@
                 :aria-invalid="!!error"
                 class="textarea__control"
                 @input="onInput"
-                @focus="isFocused = true"
-                @blur="isFocused = false"
+                @focus="onFocus"
+                @blur="onBlur"
             />
         </div>
 
-        <p v-if="error" class="textarea__error">{{ error }}</p>
-        <p v-else-if="hint" class="textarea__hint">{{ hint }}</p>
+        <p class="textarea__message" :class="messageClass" :id="messageId">
+            {{ messageText || '\u00A0' }}
+        </p>
     </div>
 </template>
 
@@ -49,7 +50,12 @@ const props = withDefaults(defineProps<Props>(), {
     readonly: false,
 });
 
-const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>();
+const emit = defineEmits<{
+    (e: 'update:modelValue', value: string | number): void;
+    (e: 'clear'): void;
+    (e: 'blur', event: FocusEvent): void;
+    (e: 'focus', event: FocusEvent): void;
+}>();
 
 const id = `textarea-${useId()}`;
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
@@ -61,8 +67,33 @@ const fieldClasses = computed(() => ({
     'textarea__field--error': !!props.error,
 }));
 
+const messageText = computed(() => {
+    if (props.error) return props.error;
+    if (props.hint) return props.hint;
+    return '';
+});
+
+const messageClass = computed(() => ({
+    'textarea__message--error': !!props.error,
+    'textarea__message--hint': !props.error && !!props.hint,
+}));
+
+const messageId = computed(() =>
+    props.error ? `${id}-error` : props.hint ? `${id}-hint` : undefined
+);
+
 const onInput = (e: Event) => {
     emit('update:modelValue', (e.target as HTMLTextAreaElement).value);
+};
+
+const onBlur = (event: FocusEvent) => {
+    isFocused.value = false;
+    emit('blur', event);
+};
+
+const onFocus = (event: FocusEvent) => {
+    isFocused.value = true;
+    emit('focus', event);
 };
 
 defineExpose({ focus: () => textareaRef.value?.focus() });
@@ -147,20 +178,24 @@ defineExpose({ focus: () => textareaRef.value?.focus() });
     min-height: 88px;
 
     &::placeholder {
-        color: var(--text-tertiary);
+        color: var(--text-placeholder);
     }
 }
 
-.textarea__error {
+.textarea__message {
+    min-height: 20px;
     font-size: var(--font-small);
-    color: var(--neon-red);
+    line-height: 1.4;
     margin: 0;
+    color: transparent;
 }
 
-.textarea__hint {
-    font-size: var(--font-small);
+.textarea__message--error {
+    color: var(--neon-pink);
+}
+
+.textarea__message--hint {
     color: var(--text-tertiary);
-    margin: 0;
 }
 
 .textarea--error .textarea__label {

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {
     leadsApi,
     type Lead,
+    type LeadPayload,
     type LeadsQuery,
     type LeadStatus,
     type LeadSource,
@@ -70,7 +71,13 @@ export const useLeadStore = defineStore('lead', {
         },
 
         hasActiveFilters(state): boolean {
-            return !!(state.search || state.status || state.source || state.manager || state.industry);
+            return !!(
+                state.search ||
+                state.status ||
+                state.source ||
+                state.manager ||
+                state.industry
+            );
         },
 
         selectedLead(state): Lead | null {
@@ -164,6 +171,31 @@ export const useLeadStore = defineStore('lead', {
 
         closeLead() {
             this.selectedId = null;
+        },
+        async createLead(data: LeadPayload) {
+            const { data: created } = await leadsApi.create(data);
+            this.items = [created, ...this.items];
+            this.total += 1;
+            return created;
+        },
+
+        async updateLead(id: number, data: Partial<LeadPayload>) {
+            const { data: updated } = await leadsApi.update(id, data);
+            const idx = this.items.findIndex((l) => l.id === id);
+            if (idx !== -1) this.items.splice(idx, 1, updated);
+            return updated;
+        },
+
+        async deleteLead(id: number) {
+            await leadsApi.delete(id);
+            this.items = this.items.filter((l) => l.id !== id);
+            this.total -= 1;
+        },
+
+        async resetLeads() {
+            await leadsApi.reset();
+            this.page = 1;
+            await this.fetchLeads();
         },
     },
 });

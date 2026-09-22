@@ -1,12 +1,22 @@
 import { apiClient } from './client';
 
 export type LeadSource =
-    | 'website' | 'referral' | 'cold_call' | 'email'
-    | 'social' | 'event' | 'partner';
+    | 'website'
+    | 'referral'
+    | 'cold_call'
+    | 'email'
+    | 'social'
+    | 'event'
+    | 'partner';
 
 export type LeadStatus =
-    | 'new' | 'contacted' | 'qualified' | 'proposal'
-    | 'negotiation' | 'won' | 'lost';
+    | 'new'
+    | 'contacted'
+    | 'qualified'
+    | 'proposal'
+    | 'negotiation'
+    | 'won'
+    | 'lost';
 
 export interface Lead {
     id: number;
@@ -24,9 +34,26 @@ export interface Lead {
     city: string;
     industry: string;
     notes: string | null;
+    createdById: number | null;
     createdAt: string;
     updatedAt: string;
     closedAt: string | null;
+}
+
+export interface LeadPayload {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string;
+    company: string;
+    position: string;
+    source: LeadSource;
+    status: LeadStatus;
+    manager: string;
+    dealAmount?: number;
+    city: string;
+    industry: string;
+    notes?: string;
 }
 
 export interface LeadsQuery {
@@ -55,10 +82,17 @@ export interface LeadsFilters {
 }
 
 export const leadsApi = {
-    getAll: (query: LeadsQuery = {}) =>
-        apiClient.get<LeadsResponse>('/leads', { params: query }),
+    getAll: (query: LeadsQuery = {}) => apiClient.get<LeadsResponse>('/leads', { params: query }),
 
     getOne: (id: number) => apiClient.get<Lead>(`/leads/${id}`),
 
     getFilters: () => apiClient.get<LeadsFilters>('/leads/filters'),
+
+    create: (data: LeadPayload) => apiClient.post<Lead>('/leads', data),
+
+    update: (id: number, data: Partial<LeadPayload>) => apiClient.patch<Lead>(`/leads/${id}`, data),
+
+    delete: (id: number) => apiClient.delete<{ message: string }>(`/leads/${id}`),
+
+    reset: () => apiClient.post<{ count: number }>('/leads/reset'),
 };

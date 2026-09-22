@@ -12,6 +12,7 @@
 
         <Footer />
         <ToastContainer />
+        <ConfirmDialog />
     </div>
 </template>
 
@@ -20,6 +21,7 @@ import { onMounted } from 'vue';
 import { useAuth } from '@features/auth/model/useAuth';
 import { RouterView } from 'vue-router';
 import { ToastContainer } from '@widgets/toast-container';
+import { ConfirmDialog } from '@shared/ui';
 import { useWebSocket } from '@shared/lib/useWebSocket';
 import { ParallaxLayer } from '@widgets/parallax-layer';
 import { Header } from '@widgets/header';
