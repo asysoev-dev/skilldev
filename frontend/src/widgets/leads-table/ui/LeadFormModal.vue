@@ -152,22 +152,32 @@ const schema = toTypedSchema(
     z.object({
         firstName: z
             .string()
-            .min(2, { error: 'Минимум 2 символа' })
-            .max(50, { error: 'Максимум 50 символов' })
-            .regex(NAME_REGEX, { error: 'Только буквы, пробел и дефис' }),
+            .min(2, { message: 'Минимум 2 символа' })
+            .max(50, { message: 'Максимум 50 символов' })
+            .regex(NAME_REGEX, { message: 'Только буквы, пробел и дефис' }),
         lastName: z
             .string()
-            .min(2, { error: 'Минимум 2 символа' })
-            .max(50, { error: 'Максимум 50 символов' })
-            .regex(NAME_REGEX, { error: 'Только буквы, пробел и дефис' }),
-        email: z.string().email({ error: 'Неверный формат email' }),
-        phone: z.string().optional().or(z.literal('')),
-        company: z.string().min(1, { error: 'Обязательное поле' }),
-        position: z.string().min(1, { error: 'Обязательное поле' }),
-        manager: z.string().min(1, { error: 'Обязательное поле' }),
-        dealAmount: z.coerce.number().min(0, { error: 'Не может быть отрицательным' }).optional(),
-        city: z.string().min(1, { error: 'Обязательное поле' }),
-        industry: z.string().min(1, { error: 'Обязательное поле' }),
+            .min(2, { message: 'Минимум 2 символа' })
+            .max(50, { message: 'Максимум 50 символов' })
+            .regex(NAME_REGEX, { message: 'Только буквы, пробел и дефис' }),
+        email: z.string().email({ message: 'Неверный формат email' }),
+        phone: z
+            .string()
+            .optional()
+            .or(z.literal(''))
+            .refine(
+                (val) => !val || /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(val),
+                { message: 'Формат: +7 (XXX) XXX-XX-XX' }
+            ),
+        company: z.string().min(1, { message: 'Обязательное поле' }),
+        position: z.string().min(1, { message: 'Обязательное поле' }),
+        manager: z.string().min(1, { message: 'Обязательное поле' }),
+        dealAmount: z.coerce
+            .number()
+            .min(0, { message: 'Не может быть отрицательным' })
+            .optional(),
+        city: z.string().min(1, { message: 'Обязательное поле' }),
+        industry: z.string().min(1, { message: 'Обязательное поле' }),
         source: z.enum(['website', 'referral', 'cold_call', 'email', 'social', 'event', 'partner']),
         status: z.enum(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']),
         notes: z.string().optional().or(z.literal('')),
