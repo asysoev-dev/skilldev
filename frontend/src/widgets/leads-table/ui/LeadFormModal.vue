@@ -165,17 +165,13 @@ const schema = toTypedSchema(
             .string()
             .optional()
             .or(z.literal(''))
-            .refine(
-                (val) => !val || /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(val),
-                { message: 'Формат: +7 (XXX) XXX-XX-XX' }
-            ),
+            .refine((val) => !val || /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(val), {
+                message: 'Формат: +7 (XXX) XXX-XX-XX',
+            }),
         company: z.string().min(1, { message: 'Обязательное поле' }),
         position: z.string().min(1, { message: 'Обязательное поле' }),
         manager: z.string().min(1, { message: 'Обязательное поле' }),
-        dealAmount: z.coerce
-            .number()
-            .min(0, { message: 'Не может быть отрицательным' })
-            .optional(),
+        dealAmount: z.coerce.number().min(0, { message: 'Не может быть отрицательным' }).optional(),
         city: z.string().min(1, { message: 'Обязательное поле' }),
         industry: z.string().min(1, { message: 'Обязательное поле' }),
         source: z.enum(['website', 'referral', 'cold_call', 'email', 'social', 'event', 'partner']),
@@ -200,9 +196,10 @@ const emptyValues = () => ({
     notes: '',
 });
 
-const { handleSubmit, errors, setValues } = useForm({
+const { handleSubmit, errors, setValues, resetForm } = useForm({
     validationSchema: schema,
     initialValues: emptyValues(),
+    keepValuesOnUnmount: false,
 });
 
 const {
@@ -293,23 +290,15 @@ watch(
         await nextTick();
 
         if (props.lead) {
-            setValues({
-                firstName: props.lead.firstName,
-                lastName: props.lead.lastName,
-                email: props.lead.email,
-                phone: props.lead.phone ?? '',
-                company: props.lead.company,
-                position: props.lead.position,
-                manager: props.lead.manager,
-                dealAmount: props.lead.dealAmount,
-                city: props.lead.city,
-                industry: props.lead.industry,
-                source: props.lead.source,
-                status: props.lead.status,
-                notes: props.lead.notes ?? '',
+            resetForm({
+                values: {
+                    ...props.lead,
+                    phone: props.lead.phone ?? '',
+                    notes: props.lead.notes ?? '',
+                },
             });
         } else {
-            setValues(emptyValues());
+            resetForm({ values: emptyValues() });
         }
     }
 );
