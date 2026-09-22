@@ -6,6 +6,7 @@ import {
   createLead,
   updateLead,
   deleteLead,
+  resetLeads,
 } from "../controllers/lead.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 
@@ -13,8 +14,10 @@ const router = Router();
 
 router.get("/", getLeads);
 router.get("/filters", getFilters);
-router.get("/:id", getLead);
 
+router.post("/reset", authMiddleware, resetLeads); // роут /reset должен идти перед /:id
+
+router.get("/:id", getLead);
 router.post("/", authMiddleware, createLead);
 router.patch("/:id", authMiddleware, updateLead);
 router.delete("/:id", authMiddleware, deleteLead);

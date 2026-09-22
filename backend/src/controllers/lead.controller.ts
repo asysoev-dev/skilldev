@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { generateLeads } from "../utils/generateLeads";
 
 import { Prisma, LeadStatus, LeadSource } from "@prisma/client";
 
@@ -277,5 +278,29 @@ export const deleteLead = async (
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to delete lead" });
+  }
+};
+
+export const resetLeads = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    if (req.user?.userId === undefined) {
+      res.status(401).json({ error: "Not authorized" });
+      return;
+    }
+
+    await prisma.$executeRawUnsafe(
+      'TRUNCATE TABLE "Lead" RESTART IDENTITY CASCADE;',
+    );
+
+    const leads = generateLeads(140, req.user.userId);
+    await prisma.lead.createMany({ data: leads });
+
+    res.json({ count: leads.length });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to reset leads" });
   }
 };
