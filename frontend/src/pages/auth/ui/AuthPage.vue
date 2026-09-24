@@ -6,14 +6,10 @@
             <div class="auth__card">
                 <header class="auth__header">
                     <h1 class="auth__title">
-                        {{ isLogin ? 'Вход' : 'Регистрация' }}
+                        {{ isLogin ? t('auth.login') : t('auth.register') }}
                     </h1>
                     <p class="auth__subtitle">
-                        {{
-                            isLogin
-                                ? 'Демо-доступ к админке портфолио'
-                                : 'Создай аккаунт для управления лидами'
-                        }}
+                        {{ isLogin ? t('auth.login.subtitle') : t('auth.register.subtitle') }}
                     </p>
                 </header>
 
@@ -24,7 +20,7 @@
                         :class="{ 'auth__tab--active': isLogin }"
                         @click="isLogin = true"
                     >
-                        Вход
+                        {{ t('auth.login') }}
                     </button>
                     <button
                         type="button"
@@ -32,7 +28,7 @@
                         :class="{ 'auth__tab--active': !isLogin }"
                         @click="isLogin = false"
                     >
-                        Регистрация
+                        {{ t('auth.register') }}
                     </button>
                 </div>
 
@@ -40,35 +36,31 @@
                     <Input
                         v-if="!isLogin"
                         v-model="form.name"
-                        label="Имя"
-                        placeholder="Ваше имя"
-                        autocomplete="name"
+                        :label="t('auth.name')"
+                        placeholder="..."
                     />
-
                     <Input
                         v-model="form.email"
                         type="email"
-                        label="Email"
+                        :label="t('auth.email')"
                         placeholder="mail@example.com"
-                        autocomplete="email"
                     />
                     <Input
                         v-model="form.password"
                         type="password"
-                        label="Пароль"
+                        :label="t('auth.password')"
                         placeholder="••••••••"
-                        autocomplete="current-password"
                     />
 
                     <p v-if="error" class="auth__error">{{ error }}</p>
 
                     <Button type="submit" variant="primary" full-width :loading="isLoading">
-                        {{ isLogin ? 'Войти' : 'Зарегистрироваться' }}
+                        {{ isLogin ? t('auth.submit.login') : t('auth.submit.register') }}
                     </Button>
                 </form>
 
                 <div class="auth__divider">
-                    <span>или</span>
+                    <span>{{ t('auth.divider') }}</span>
                 </div>
 
                 <Button
@@ -78,10 +70,10 @@
                     :loading="isDemoLoading"
                     @click="handleDemoLogin"
                 >
-                    Войти как демо-пользователь
+                    {{ t('auth.demo') }}
                 </Button>
 
-                <p class="auth__hint">Демо-аккаунт с правами admin. Все данные вымышленные.</p>
+                <p class="auth__hint">{{ t('auth.demo.hint') }}</p>
             </div>
         </div>
     </div>
@@ -92,9 +84,11 @@ import { ref, reactive } from 'vue';
 import { SparklesIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from '@features/auth/model/useAuth';
 import { BackToStands, Button, Input } from '@shared/ui';
+import { useI18n } from '@shared/lib/useI18n';
 
 const { login, register, isLoading, error } = useAuth();
 
+const { t } = useI18n();
 const isLogin = ref(true);
 const isDemoLoading = ref(false);
 

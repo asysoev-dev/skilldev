@@ -1,13 +1,17 @@
 <template>
     <section id="skills" class="skill-grid">
-        <h2 class="skill-grid__title">Демо-стенды</h2>
-        <p class="skill-grid__subtitle">Мой стек — в живом коде.</p>
+        <h2 class="skill-grid__title">{{ t('skills.title') }}</h2>
+        <p class="skill-grid__subtitle">{{ t('skills.subtitle') }}</p>
 
         <div class="skill-grid__container">
             <SkillCard
                 v-for="skill in skills"
                 :key="skill.id"
-                :skill="skill"
+                :skill="{
+                    ...skill,
+                    title: t(`skills.${skill.id}.title`),
+                    description: t(`skills.${skill.id}.description`),
+                }"
                 @click="openModal(skill)"
             />
         </div>
@@ -25,14 +29,10 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SkillCard from './SkillCard.vue';
 import { skills, type Skill } from '../model/skills';
-import {
-    FrontendDemo,
-    FullstackDemo,
-    DevOpsDemo,
-    SSRDemo,
-    UIKitDemo,
-} from '@features/demo-modal';
+import { FrontendDemo, FullstackDemo, DevOpsDemo, SSRDemo, UIKitDemo } from '@features/demo-modal';
+import { useI18n } from '@shared/lib/useI18n';
 
+const { t } = useI18n();
 const router = useRouter();
 const activeModal = ref<string | null>(null);
 

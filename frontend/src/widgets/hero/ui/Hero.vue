@@ -1,16 +1,12 @@
 <template>
     <section class="hero">
         <div class="hero__content">
-            <h1 class="hero__title tour__step-first">
-                <span class="hero__title-accent">Frontend</span
-                ><span class="hero__title-dash">-</span>разработчик
+            <h1 class="hero__title">
+                <span class="hero__title-accent">{{ t('hero.title.frontend') }}</span
+                >{{ t('hero.title.role') }}.
             </h1>
 
-            <p class="hero__subtitle">
-                Привет! Меня зовут Алексей. <br />
-                5+ лет опыта в коммерческой разработке. Пишу на Vue 3 и TypeScript, бэкенд — на
-                Node.js. Работал над B2B-системами, IoT и e-commerce.
-            </p>
+            <p class="hero__subtitle">{{ t('hero.subtitle') }}</p>
 
             <div class="hero__badges">
                 <Tag size="sm">Vue 3</Tag>
@@ -24,12 +20,14 @@
             </div>
 
             <div class="hero__actions">
-                <Button variant="outline-primary-action" size="lg" class="hero__tour-btn" @click="onTour"
-                    >Тур по сайту</Button
-                >
-                <Button variant="primary" size="lg" @click="onDemo">Демо</Button>
+                <Button variant="primary" size="lg" class="hero__tour-btn" @click="onTour">
+                    {{ t('hero.cta.tour') }}
+                </Button>
+                <Button variant="outline-primary-action" size="lg" @click="onDemo">
+                    {{ t('hero.cta.demo') }}
+                </Button>
                 <Button variant="outline" size="lg" :icon-left="CodeBracketIcon" @click="onGithub">
-                    GitHub
+                    {{ t('hero.cta.github') }}
                 </Button>
             </div>
         </div>
@@ -50,7 +48,9 @@
 <script setup lang="ts">
 import { CodeBracketIcon } from '@heroicons/vue/24/outline';
 import { Button, Tag } from '@shared/ui';
+import { useI18n } from '@shared/lib/useI18n';
 
+const { t } = useI18n();
 const onTour = () => console.log('Tour clicked');
 const onDemo = () => (window.location.href = '/demo');
 const onGithub = () =>

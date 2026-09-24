@@ -1,8 +1,11 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const app = express();
+app.use(cookieParser());
+
 const PORT = process.env.SSR_PORT || 3000;
 
 let renderer;
@@ -57,14 +60,14 @@ const getClientFile = () => {
     return `/${files[0]}`;
 };
 
-const template = (html, state) => {
+const template = (html, state, lang = 'ru') => {
     const cssFiles = getCssFiles();
     const cssLinks = cssFiles.map((f) => `<link rel="stylesheet" href="${f}">`).join('\n        ');
     const clientFile = getClientFile();
 
     return `
     <!DOCTYPE html>
-    <html lang="ru">
+    <html lang="${lang}">
     <head>
         <meta charset="UTF-8">
         <link rel="icon" href="/favicon.svg">
@@ -89,9 +92,11 @@ loadRenderer().then(() => {
             return;
         }
 
+        const lang = req.cookies.portfolioLang === 'en' ? 'en' : 'ru';
+
         try {
-            const { html, state } = await renderer('/');
-            res.send(template(html, state));
+            const { html, state } = await renderer('/', lang);
+            res.send(template(html, state, lang));
         } catch (error) {
             console.error('Render error:', error.message);
             res.status(500).send('Server Error');
