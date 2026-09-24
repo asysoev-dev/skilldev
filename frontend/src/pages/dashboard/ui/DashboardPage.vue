@@ -6,9 +6,10 @@
             <div>
                 <h1 class="dashboard__title">
                     Привет, {{ userStore.user?.name || userStore.user?.email }}
+                    <Tag v-if="isDemo" variant="neon-yellow" size="sm">Демо-режим</Tag>
                 </h1>
                 <p class="dashboard__subtitle">
-                    Это админка портфолио. Здесь можно создавать, редактировать и удалять лиды.
+                    Это админка. Здесь можно создавать, редактировать и удалять лидов.
                 </p>
             </div>
 
@@ -99,6 +100,7 @@
                         <td>
                             <div class="dashboard__row-actions">
                                 <button
+                                    v-if="isAdmin || lead.createdById === userStore.user?.id"
                                     type="button"
                                     class="dashboard__icon-btn"
                                     aria-label="Редактировать"
@@ -107,6 +109,7 @@
                                     <PencilSquareIcon />
                                 </button>
                                 <button
+                                    v-if="isAdmin || lead.createdById === userStore.user?.id"
                                     type="button"
                                     class="dashboard__icon-btn dashboard__icon-btn--danger"
                                     aria-label="Удалить"
@@ -169,10 +172,8 @@ const formOpen = ref(false);
 const editingLead = ref<Lead | null>(null);
 const resetting = ref(false);
 
-const isAdmin = computed(() => {
-    // role не в типе User — просто проверяем email
-    return userStore.user?.email === 'demo@skilldev.ru';
-});
+const isAdmin = computed(() => userStore.user?.role === 'admin');
+const isDemo = computed(() => userStore.user?.isDemo === true);
 
 const statusLabels: Record<LeadStatus, string> = {
     new: 'Новый',
