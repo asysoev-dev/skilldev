@@ -33,6 +33,7 @@ const emit = defineEmits<{ (e: 'click'): void }>();
     text-decoration: none;
     color: inherit;
     display: block;
+    cursor: pointer;
 
     &:hover {
         text-decoration: none;

@@ -54,6 +54,7 @@ const onClick = (e: Event) => props.clickable && emit('click', e);
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
     overflow: hidden;
+    cursor: pointer;
 }
 
 .glass-card--padding-sm {
@@ -69,6 +70,26 @@ const onClick = (e: Event) => props.clickable && emit('click', e);
 .glass-card--hoverable:hover {
     transform: translateY(-4px);
     background: var(--glass-hover);
+
+    &::before {
+        opacity: 1;
+    }
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    background: radial-gradient(
+        circle at top left,
+        color-mix(in srgb, var(--card-accent, transparent) 12%, transparent),
+        transparent 60%
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-accent, transparent) 25%, transparent);
 }
 
 .glass-card--clickable {
