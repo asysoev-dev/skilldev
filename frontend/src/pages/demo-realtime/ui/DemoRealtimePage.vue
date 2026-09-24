@@ -19,24 +19,22 @@
             <div class="realtime__card">
                 <span class="realtime__card-label">Сейчас на сайте</span>
                 <span class="realtime__card-value">{{ onlineCount }}</span>
-                <span class="realtime__card-hint"> Открой вторую вкладку, либо используй смартфон — счётчик вырастет. </span>
+                <span class="realtime__card-hint">
+                    Открой вторую вкладку, либо используй смартфон — счётчик вырастет.
+                </span>
             </div>
             <div class="realtime__card realtime__card--qr">
                 <span class="realtime__card-label">Ссылка для мобильной версии</span>
                 <div class="realtime__qr">
                     <QrcodeVue :value="siteUrl" :size="140" level="M" render-as="svg" />
                 </div>
-                <span class="realtime__card-hint">
-                    Отсканируй QR-код — счётчик вырастет.
-                </span>
+                <span class="realtime__card-hint"> Отсканируй QR-код — счётчик вырастет. </span>
             </div>
         </div>
 
         <div class="realtime__section">
             <h2 class="realtime__section-title">Отправить уведомление</h2>
-            <p class="realtime__section-text">
-                Его получат все открытые вкладки этого сайта.
-            </p>
+            <p class="realtime__section-text">Его получат все открытые вкладки этого сайта.</p>
 
             <form class="realtime__form" @submit.prevent="send">
                 <Input v-model="text" placeholder="Текст уведомления..." />
@@ -189,14 +187,27 @@ const send = () => {
     display: flex;
     gap: var(--gap-sm);
     flex-wrap: wrap;
+    align-items: flex-start;
 
     @include respond-down(tablet) {
         flex-direction: column;
+
+        :deep(.button) {
+            width: 100%;
+        }
     }
 
     :deep(.input) {
         flex: 1;
         min-width: 200px;
+    }
+
+    :deep(.input__message) {
+        display: none;
+    }
+
+    :deep(.button) {
+        min-height: 44px;
     }
 }
 
