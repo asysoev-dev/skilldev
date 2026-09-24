@@ -5,7 +5,7 @@ import {
   REFRESH_TOKEN_EXPIRY,
   generateAccessToken,
   generateRefreshToken,
-  verifyAccessToken
+  verifyAccessToken,
 } from "../utils/jwt";
 
 /**
@@ -33,7 +33,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       data: { email, password: hashedPassword, name },
     });
 
-    const accessToken = generateAccessToken(user.id, user.email);
+    const accessToken = generateAccessToken(user.id, user.email, user.role);
     const refreshToken = generateRefreshToken(user.id);
 
     await prisma.session.create({
@@ -53,7 +53,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({
       accessToken,
-      user: { id: user.id, email: user.email, name: user.name },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        isDemo: user.isDemo,
+      },
     });
     return;
   } catch (error) {
@@ -92,7 +98,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       where: { userId: user.id },
     });
 
-    const accessToken = generateAccessToken(user.id, user.email);
+    const accessToken = generateAccessToken(user.id, user.email, user.role);
     const refreshToken = generateRefreshToken(user.id);
 
     const expiresInSeconds = +REFRESH_TOKEN_EXPIRY;
@@ -114,7 +120,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     res.json({
       accessToken,
-      user: { id: user.id, email: user.email, name: user.name },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        isDemo: user.isDemo,
+      },
     });
     return;
   } catch (error) {
@@ -163,7 +175,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
   try {
     const session = await prisma.session.findUnique({
       where: { refreshToken },
-      include: { user: true },
+      include: { user: { select: { id: true, email: true, role: true } } },
     });
 
     if (!session || session.expiresAt < new Date()) {
@@ -177,6 +189,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     const newAccessToken = generateAccessToken(
       session.user.id,
       session.user.email,
+      session.user.role,
     );
 
     res.json({ accessToken: newAccessToken });
@@ -209,15 +222,24 @@ export const me = async (req: Request, res: Response): Promise<void> => {
     const decoded = verifyAccessToken(token);
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { id: true, email: true, name: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        isDemo: true,
+        createdAt: true,
+      },
     });
+
+    res.json(user);
 
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
     }
 
-    res.json(user);
+    // res.json(user);
     return;
   } catch (error) {
     res.status(403).json({ error: "Invalid token" });

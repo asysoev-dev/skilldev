@@ -8,6 +8,7 @@ export const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY!;
 export interface TokenData {
   userId: number;
   email: string;
+  role: 'user' | 'admin';
 }
 
 export interface TokenPayload extends TokenData {
@@ -15,25 +16,25 @@ export interface TokenPayload extends TokenData {
   exp: number;
 }
 
-export const generateAccessToken = (userId: number, email: string) => {
-  const payload: TokenData = { userId, email };
-  // @ts-ignore
-  return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: `${ACCESS_TOKEN_EXPIRY}s`,
-  });
+export const generateAccessToken = (userId: number, email: string, role: 'user' | 'admin' = 'user') => {
+    const payload: TokenData = { userId, email, role };
+    // @ts-ignore
+    return jwt.sign(payload, JWT_SECRET, {
+        expiresIn: `${ACCESS_TOKEN_EXPIRY}s`,
+    });
 };
 
 export const generateRefreshToken = (userId: number) => {
   // @ts-ignore
-  return jwt.sign({ userId }, JWT_REFRESH_SECRET, {
-    expiresIn: `${REFRESH_TOKEN_EXPIRY}s`,
-  });
+    return jwt.sign({ userId }, JWT_REFRESH_SECRET, {
+        expiresIn: `${REFRESH_TOKEN_EXPIRY}s`,
+    });
 };
 
 export const verifyAccessToken = (token: string): TokenPayload => {
-  return jwt.verify(token, JWT_SECRET) as TokenPayload;
+    return jwt.verify(token, JWT_SECRET) as TokenPayload;
 };
 
 export const verifyRefreshToken = (token: string): TokenPayload => {
-  return jwt.verify(token, JWT_REFRESH_SECRET) as TokenPayload;
+    return jwt.verify(token, JWT_REFRESH_SECRET) as TokenPayload;
 };

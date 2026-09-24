@@ -43,6 +43,8 @@ export const getLeads = async (req: Request, res: Response): Promise<void> => {
       limit = "25",
     } = req.query as Record<string, string>;
 
+    const user = (req as AuthRequest).user;
+
     const where: Prisma.LeadWhereInput = { AND: [] };
     const and = where.AND as Prisma.LeadWhereInput[];
 
@@ -71,6 +73,10 @@ export const getLeads = async (req: Request, res: Response): Promise<void> => {
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 25));
     const skip = (pageNum - 1) * limitNum;
+
+    if (user && user.role !== "admin") {
+      and.push({ createdById: user.userId });
+    }
 
     const [items, total] = await Promise.all([
       prisma.lead.findMany({
@@ -240,6 +246,17 @@ export const updateLead = async (
       return;
     }
 
+    const user = req.user!;
+    if (user.role !== "admin" && lead.createdById !== user.userId) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    if (!lead) {
+      res.status(404).json({ error: "Lead not found" });
+      return;
+    }
+
     const data = pickLeadFields(req.body) as Prisma.LeadUpdateInput & {
       statusOrder?: number;
     };
@@ -273,6 +290,17 @@ export const deleteLead = async (
       return;
     }
 
+    const user = req.user!;
+    if (user.role !== "admin" && lead.createdById !== user.userId) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    if (!lead) {
+      res.status(404).json({ error: "Lead not found" });
+      return;
+    }
+
     await prisma.lead.delete({ where: { id } });
     res.json({ message: "Lead deleted" });
   } catch (error) {
@@ -288,6 +316,11 @@ export const resetLeads = async (
   try {
     if (req.user?.userId === undefined) {
       res.status(401).json({ error: "Not authorized" });
+      return;
+    }
+
+    if (req.user?.role !== "admin") {
+      res.status(403).json({ error: "Forbidden" });
       return;
     }
 
