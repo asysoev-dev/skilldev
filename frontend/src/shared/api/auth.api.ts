@@ -1,4 +1,5 @@
 import { apiClient } from './client';
+import type { User } from '@entities/user';
 
 export interface LoginCredentials {
     email: string;
@@ -11,11 +12,7 @@ export interface RegisterData extends LoginCredentials {
 
 export interface AuthResponse {
     accessToken: string;
-    user: {
-        id: number;
-        email: string;
-        name: string;
-    };
+    user: User;
 }
 
 export const authApi = {
@@ -27,5 +24,5 @@ export const authApi = {
 
     refresh: () => apiClient.post<{ accessToken: string }>('/auth/refresh'),
 
-    getMe: () => apiClient.get('/auth/me'),
+    getMe: () => apiClient.get<User>('/auth/me'),
 };

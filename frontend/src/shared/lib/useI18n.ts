@@ -27,7 +27,9 @@ const messages: Record<Lang, Record<string, string>> = {
         // Hero
         'hero.title.role': 'разработчик',
         'hero.title.frontend': 'Frontend-',
-        'hero.subtitle': 'Меня зовут Алексей. 5+ лет опыта в коммерческой разработке. Пишу на Vue 3 и TypeScript, бэкенд — на Node.js. Работал над B2B-системами, IoT и e-commerce. Этот сайт сделан с нуля: SSR, Docker, JWT, WebSocket. Исходники — на GitHub.',
+        'hero.subtitle.1':
+            'Меня зовут Алексей. Я фронтенд-разработчик с пятилетним стажем в коммерческой разработке. Пишу сложные интерфейсы на Vue 3 и TypeScript. Также есть опыт на бэкенде (Node.js). Работал в B2B (медицина), IoT и e-commerce.',
+        'hero.subtitle.2': 'Собрал этот сайт как единый проект для демонстрации своих навыков.',
         'hero.cta.tour': 'Тур по сайту',
         'hero.cta.demo': 'Демо',
         'hero.cta.github': 'GitHub',
@@ -68,6 +70,36 @@ const messages: Record<Lang, Record<string, string>> = {
 
         // Common
         'common.back': 'К стендам',
+
+        // About
+        'about.title': 'Обо мне',
+        'about.subtitle': 'Коротко — без дат и компаний.',
+        'about.bio.1':
+            'Меня зовут Алексей. Frontend / Fullstack разработчик с 5+ годами коммерческого опыта.',
+        'about.bio.2':
+            'Специализируюсь на Vue 3 + TypeScript. Работал над B2B-системами, IoT-платформами и e-commerce. Умею писать код, ревьюить, документировать и деплоить.',
+        'about.bio.3':
+            'Верю, что хороший интерфейс — это быстро, надёжно и удобно. Исходники этого сайта открыты на GitHub.',
+
+        'about.principles.title': 'Принципы',
+        'about.principle.clean.title': 'Чистый код',
+        'about.principle.clean.text':
+            'Читаемый, типизированный, с понятной архитектурой. Без магии.',
+        'about.principle.performance.title': 'Производительность',
+        'about.principle.performance.text':
+            'Быстрая загрузка, минимум запросов, разумный рендеринг.',
+        'about.principle.docs.title': 'Документация',
+        'about.principle.docs.text': 'Комментарии там, где нужно. README, JSDoc, Confluence.',
+        'about.principle.learning.title': 'Постоянное обучение',
+        'about.principle.learning.text':
+            'Учусь на ИТ-направлении с уклоном в ИИ. Слежу за трендами.',
+
+        'about.stack.title': 'Стек',
+        'about.stack.frontend': 'Frontend',
+        'about.stack.backend': 'Backend',
+        'about.stack.infra': 'Инфраструктура',
+
+        'about.contacts.title': 'Контакты',
     },
     en: {
         // Nav
@@ -91,7 +123,9 @@ const messages: Record<Lang, Record<string, string>> = {
         // Hero
         'hero.title.role': 'developer',
         'hero.title.frontend': 'Frontend ',
-        'hero.subtitle': 'My name is Alexey. 5+ years of commercial experience. I code in Vue 3 and TypeScript, backend — in Node.js. Worked on B2B systems, IoT and e-commerce. This site was built from scratch: SSR, Docker, JWT, WebSocket. Source code — on GitHub.',
+        'hero.subtitle.1':
+            'My name is Alexey. I am a frontend developer with five years of commercial experience. I build complex interfaces with Vue 3 and TypeScript. I also have backend experience (Node.js). Worked in B2B (healthcare), IoT and e-commerce.',
+        'hero.subtitle.2': 'I built this site as a single project to showcase my skills.',
         'hero.cta.tour': 'Take a tour',
         'hero.cta.demo': 'Demo',
         'hero.cta.github': 'GitHub',
@@ -132,6 +166,33 @@ const messages: Record<Lang, Record<string, string>> = {
 
         // Common
         'common.back': 'Back to stands',
+
+        // About
+        'about.title': 'About',
+        'about.subtitle': 'Briefly — without dates or companies.',
+        'about.bio.1':
+            'My name is Alexey. Frontend / Fullstack developer with 5+ years of commercial experience.',
+        'about.bio.2':
+            'I specialize in Vue 3 + TypeScript. Worked on B2B systems, IoT platforms and e-commerce. I can code, review, document and deploy.',
+        'about.bio.3':
+            'I believe a good interface is fast, reliable and convenient. The source code of this site is open on GitHub.',
+
+        'about.principles.title': 'Principles',
+        'about.principle.clean.title': 'Clean code',
+        'about.principle.clean.text': 'Readable, typed, with a clear architecture. No magic.',
+        'about.principle.performance.title': 'Performance',
+        'about.principle.performance.text': 'Fast load, minimal requests, sane rendering.',
+        'about.principle.docs.title': 'Documentation',
+        'about.principle.docs.text': 'Comments where needed. README, JSDoc, Confluence.',
+        'about.principle.learning.title': 'Continuous learning',
+        'about.principle.learning.text': 'Studying IT with a focus on AI. Following trends.',
+
+        'about.stack.title': 'Stack',
+        'about.stack.frontend': 'Frontend',
+        'about.stack.backend': 'Backend',
+        'about.stack.infra': 'Infrastructure',
+
+        'about.contacts.title': 'Contacts',
     },
 };
 

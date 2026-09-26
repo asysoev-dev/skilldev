@@ -3,10 +3,13 @@
         <div class="hero__content">
             <h1 class="hero__title">
                 <span class="hero__title-accent">{{ t('hero.title.frontend') }}</span
-                >{{ t('hero.title.role') }}.
+                >{{ t('hero.title.role') }}
             </h1>
 
-            <p class="hero__subtitle">{{ t('hero.subtitle') }}</p>
+            <div class="hero__subtitle">
+                <p>{{ t('hero.subtitle.1') }}</p>
+                <p>{{ t('hero.subtitle.2') }}</p>
+            </div>
 
             <div class="hero__badges">
                 <Tag size="sm">Vue 3</Tag>
@@ -23,16 +26,16 @@
                 <Button variant="primary" size="lg" class="hero__tour-btn" @click="onTour">
                     {{ t('hero.cta.tour') }}
                 </Button>
-                <Button variant="outline-primary-action" size="lg" @click="onDemo">
+                <!-- <Button variant="outline-primary-action" size="lg" @click="onDemo">
                     {{ t('hero.cta.demo') }}
-                </Button>
+                </Button> -->
                 <Button variant="outline" size="lg" :icon-left="CodeBracketIcon" @click="onGithub">
                     {{ t('hero.cta.github') }}
                 </Button>
             </div>
         </div>
 
-        <div class="hero__photo-wrapper tour__step-second">
+        <div class="hero__photo-wrapper">
             <img
                 src="/myfoto.jpg"
                 alt="Алексей Сысоев"
@@ -49,10 +52,17 @@
 import { CodeBracketIcon } from '@heroicons/vue/24/outline';
 import { Button, Tag } from '@shared/ui';
 import { useI18n } from '@shared/lib/useI18n';
+import { useRouter } from 'vue-router';
+import { useTour } from '@shared/lib/useTour';
+import { tourSteps } from '@shared/lib/tourSteps';
+
+const router = useRouter();
+const { restart } = useTour();
+
+const onTour = () => restart(tourSteps, router);
 
 const { t } = useI18n();
-const onTour = () => console.log('Tour clicked');
-const onDemo = () => (window.location.href = '/demo');
+// const onDemo = () => (window.location.href = '/demo');
 const onGithub = () =>
     window.open('https://github.com/asysoev-dev/skilldev', '_blank', 'noopener noreferrer');
 </script>

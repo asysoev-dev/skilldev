@@ -3,7 +3,7 @@
         <BackToStands />
 
         <div class="auth__container">
-            <div class="auth__card">
+            <div class="auth__card tour__step-11">
                 <header class="auth__header">
                     <h1 class="auth__title">
                         {{ isLogin ? t('auth.login') : t('auth.register') }}
@@ -64,6 +64,7 @@
                 </div>
 
                 <Button
+                    class="tour__step-111"
                     variant="outline-primary-action"
                     full-width
                     :icon-left="SparklesIcon"
