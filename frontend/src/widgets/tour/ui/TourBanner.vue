@@ -1,10 +1,10 @@
 <template>
     <Teleport v-if="visible" to="body">
         <Transition name="banner">
-            <div class="tour-banner">
+            <div v-if="visible" class="tour-banner">
                 <div class="tour-banner__content">
                     <strong class="tour-banner__title">Хочешь быстрый тур?</strong>
-                    <span class="tour-banner__text"> Покажу за 6 шагов, что здесь есть. </span>
+                    <span class="tour-banner__text"> Покажу за несколько шагов, что здесь есть. </span>
                 </div>
 
                 <div class="tour-banner__actions">
@@ -18,25 +18,27 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { Button } from '@shared/ui';
-import { useTour, type TourStep } from '@shared/lib/useTour';
+import { useTour } from '@shared/lib/useTour';
+import { tourSteps } from '@shared/lib/tourSteps';
+import { useRoute } from 'vue-router';
 
-interface Props {
-    steps: TourStep[];
-}
-
-const props = defineProps<Props>();
+const router = useRouter();
+const route = useRoute();
 
 const { start, shouldShowBanner } = useTour();
+
 const visible = ref(false);
 
 onMounted(() => {
+    if (route.path !== '/') return;
     visible.value = shouldShowBanner();
 });
 
 const startTour = () => {
     visible.value = false;
-    start(props.steps);
+    start(tourSteps, router);
 };
 
 const dismiss = () => {

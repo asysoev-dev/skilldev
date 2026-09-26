@@ -9,9 +9,12 @@
             />
 
             <div
-                v-if="currentStep"
+                v-if="currentStep && (targetRect || isCentered)"
                 class="tour__popover"
-                :class="{ 'is-scrolling': isScrolling }"
+                :class="{
+                    'is-scrolling': isScrolling,
+                    'tour__popover--centered': isCentered,
+                }"
                 :style="popoverStyle"
             >
                 <div class="tour__header">
@@ -57,27 +60,27 @@ const isScrolling = ref(false);
 let ticking = false;
 let scrollTimeout: number | null = null;
 
+const isCentered = computed(() => !currentStep.value?.target);
+
 const updateRect = async () => {
-    if (!currentStep.value) {
+    if (!currentStep.value || !currentStep.value.target) {
         targetRect.value = null;
         return;
     }
+
     await nextTick();
 
     let selector = currentStep.value.target;
+    const el = document.querySelector(selector);
+    const inPopover = el?.closest('.settings-popover');
+    const popoverOpen = settings.isOpen;
 
-    if (currentStep.value.fallbackTarget) {
-        const el = document.querySelector(selector);
-        const inPopover = el?.closest('.settings-popover');
-        const popoverOpen = settings.isOpen;   // ← не DOM, а store
-
-        if (!el || (inPopover && !popoverOpen)) {
-            selector = currentStep.value.fallbackTarget;
-        }
+    if (currentStep.value.fallbackTarget && (!el || (inPopover && !popoverOpen))) {
+        selector = currentStep.value.fallbackTarget;
     }
 
-    const el = document.querySelector(selector);
-    targetRect.value = el?.getBoundingClientRect() ?? null;
+    const finalEl = document.querySelector(selector);
+    targetRect.value = finalEl?.getBoundingClientRect() ?? null;
 };
 
 const onScrollOrResize = () => {
@@ -97,10 +100,18 @@ const onScrollOrResize = () => {
     }
 };
 
-watch(
-    [active, currentIndex, () => settings.isOpen],
-    updateRect
-);
+watch([active, currentIndex, () => settings.isOpen], async () => {
+    await updateRect();
+
+    let attempts = 0;
+    const timer = setInterval(() => {
+        updateRect();
+        attempts++;
+        if (attempts >= 10 || (targetRect.value && targetRect.value.width > 0)) {
+            clearInterval(timer);
+        }
+    }, 100);
+});
 
 onMounted(() => {
     window.addEventListener('resize', onScrollOrResize);
@@ -134,8 +145,12 @@ const spotlightStyle = computed(() => {
 });
 
 const popoverStyle = computed(() => {
-    if (!targetRect.value) {
-        return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+    if (isCentered.value || !targetRect.value) {
+        return {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+        };
     }
 
     const rect = targetRect.value;
@@ -284,5 +299,9 @@ const popoverStyle = computed(() => {
     justify-content: flex-end;
     gap: var(--gap-sm);
     margin-top: var(--gap-sm);
+}
+
+.tour__popover--centered {
+    transition: opacity var(--transition-base);
 }
 </style>

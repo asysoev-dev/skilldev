@@ -1,7 +1,6 @@
 <template>
     <div class="app-layout">
         <ParallaxLayer />
-
         <Header />
 
         <main class="app-layout__main">
@@ -11,8 +10,12 @@
         </main>
 
         <Footer />
+
         <ToastContainer />
         <ConfirmDialog />
+        <TourBanner />
+        <TourOverlay />
+        <MobileNotice />
     </div>
 </template>
 
@@ -20,12 +23,13 @@
 import { onMounted } from 'vue';
 import { useAuth } from '@features/auth/model/useAuth';
 import { RouterView } from 'vue-router';
-import { ToastContainer } from '@widgets/toast-container';
-import { ConfirmDialog } from '@shared/ui';
-import { useWebSocket } from '@shared/lib/useWebSocket';
 import { ParallaxLayer } from '@widgets/parallax-layer';
 import { Header } from '@widgets/header';
 import { Footer } from '@widgets/footer';
+import { ToastContainer } from '@widgets/toast-container';
+import { ConfirmDialog } from '@shared/ui';
+import { TourBanner, TourOverlay, MobileNotice } from '@widgets/tour';
+import { useWebSocket } from '@shared/lib/useWebSocket';
 
 const { checkAuth } = useAuth();
 

@@ -3,7 +3,7 @@
         <div class="settings-popover__item">
             <span class="settings-popover__label">{{ t('controls.theme') }}</span>
             <Switch
-                class="tour__step-third"
+                class="tour__step-1"
                 :model-value="isDark"
                 @update:model-value="toggleTheme"
             />
@@ -12,7 +12,7 @@
         <div v-if="canRun" class="settings-popover__item">
             <span class="settings-popover__label">{{ t('controls.parallax') }}</span>
             <Switch
-                class="tour__step-fourth"
+                class="tour__step-2"
                 :disabled="!isDark"
                 :model-value="enabled"
                 @update:model-value="toggle"
@@ -21,7 +21,7 @@
 
         <div class="settings-popover__item">
             <span class="settings-popover__label">{{ t('controls.lang') }}</span>
-            <LangSwitcher class="tour__step-fifth" />
+            <LangSwitcher class="tour__step-3" />
         </div>
     </div>
 </template>
