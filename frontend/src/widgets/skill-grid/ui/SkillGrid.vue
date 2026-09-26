@@ -1,5 +1,5 @@
 <template>
-    <section id="skills" class="skill-grid">
+    <section id="skills" class="skill-grid tour__step-4">
         <h2 class="skill-grid__title">{{ t('skills.title') }}</h2>
         <p class="skill-grid__subtitle">{{ t('skills.subtitle') }}</p>
 

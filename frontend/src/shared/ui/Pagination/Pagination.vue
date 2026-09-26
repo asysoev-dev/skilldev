@@ -1,5 +1,5 @@
 <template>
-    <div class="pagination">
+    <div class="pagination tour__step-7">
         <div class="pagination__info">Показано {{ rangeStart }}–{{ rangeEnd }} из {{ total }}</div>
 
         <div class="pagination__controls">

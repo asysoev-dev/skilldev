@@ -78,7 +78,6 @@ const onInput = (e: Event) => {
     const digits = extractDigits(target.value);
     const formatted = format(digits);
 
-    // принудительно синхронизируем нативный input, если значение обрезано
     if (target.value !== formatted) {
         target.value = formatted;
     }

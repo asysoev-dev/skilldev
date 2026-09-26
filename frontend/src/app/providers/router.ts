@@ -75,7 +75,6 @@ export function createRouter() {
         if (to.meta.requiresAuth) {
             if (userStore.isAuthenticated) return true;
 
-            // тихо пробуем refresh
             try {
                 const { authApi } = await import('@shared/api/auth.api');
                 const { data } = await authApi.refresh();

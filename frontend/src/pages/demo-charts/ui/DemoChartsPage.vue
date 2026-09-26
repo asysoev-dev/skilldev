@@ -12,7 +12,7 @@
 
         <div v-else-if="store.error" class="demo-charts__error">{{ store.error }}</div>
 
-        <div v-else class="demo-charts__grid">
+        <div v-else class="demo-charts__grid tour__step-81">
             <TimelineChart
                 v-if="store.timeline"
                 :data="store.timeline"

@@ -8,7 +8,7 @@
                     Таблица лидов с поиском, фильтрами, сортировкой и пагинацией.
                 </p>
             </div>
-            <Button variant="outline" size="sm" :icon-left="ArrowDownTrayIcon" @click="exportCsv">
+            <Button class="tour__step-8" variant="outline" size="sm" :icon-left="ArrowDownTrayIcon" @click="exportCsv">
                 Экспорт CSV
             </Button>
         </header>
@@ -17,7 +17,7 @@
             Все данные вымышленные. Совпадения случайны.
         </div>
 
-        <div class="demo-table__toolbar">
+        <div class="demo-table__toolbar tour__step-5">
             <SearchInput
                 v-model="store.search"
                 placeholder="Поиск по имени, компании, email..."

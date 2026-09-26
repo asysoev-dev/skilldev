@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard">
+    <div class="dashboard tour__step-12">
         <BackToStands />
 
         <header class="dashboard__header">
@@ -16,6 +16,7 @@
             <div class="dashboard__actions">
                 <Button
                     v-if="isAdmin"
+                    class="tour__step-15"
                     variant="outline"
                     size="sm"
                     :icon-left="ArrowPathIcon"
@@ -52,7 +53,7 @@
 
         <div class="dashboard__toolbar">
             <SearchInput v-model="store.search" placeholder="Поиск..." @debounced="onSearch" />
-            <Button variant="primary" :icon-left="PlusIcon" @click="openCreate">
+            <Button class="tour__step-13" variant="primary" :icon-left="PlusIcon" @click="openCreate">
                 Добавить лида
             </Button>
         </div>
@@ -98,7 +99,7 @@
                             <Tag v-else variant="default" size="sm">seed</Tag>
                         </td>
                         <td>
-                            <div class="dashboard__row-actions">
+                            <div class="dashboard__row-actions tour__step-14">
                                 <button
                                     v-if="isAdmin || lead.createdById === userStore.user?.id"
                                     type="button"

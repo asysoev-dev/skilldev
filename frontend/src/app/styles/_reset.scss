@@ -108,3 +108,7 @@ table {
         scroll-behavior: auto !important;
     }
 }
+
+body.tour-locked {
+    user-select: none;
+}

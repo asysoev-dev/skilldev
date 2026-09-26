@@ -3,7 +3,7 @@
         <div class="data-table__wrapper">
             <table class="data-table__table">
                 <thead>
-                    <tr>
+                    <tr class="tour__step-6">
                         <th
                             v-for="col in columns"
                             :key="col.key"

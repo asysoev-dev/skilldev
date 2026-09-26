@@ -15,7 +15,7 @@
             <span v-else>Соединение потеряно</span>
         </div>
 
-        <div class="realtime__grid">
+        <div class="realtime__grid tour__step-9">
             <div class="realtime__card">
                 <span class="realtime__card-label">Сейчас на сайте</span>
                 <span class="realtime__card-value">{{ onlineCount }}</span>
@@ -36,7 +36,7 @@
             <h2 class="realtime__section-title">Отправить уведомление</h2>
             <p class="realtime__section-text">Его получат все открытые вкладки этого сайта.</p>
 
-            <form class="realtime__form" @submit.prevent="send">
+            <form class="realtime__form tour__step-10" @submit.prevent="send">
                 <Input v-model="text" placeholder="Текст уведомления..." />
                 <Button type="submit" variant="primary" :disabled="!text">Отправить</Button>
             </form>
