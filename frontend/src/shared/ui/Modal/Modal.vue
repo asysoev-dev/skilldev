@@ -6,7 +6,6 @@
                 class="modal"
                 role="dialog"
                 aria-modal="true"
-                @click.self="close"
             >
                 <div class="modal__panel" :class="`modal__panel--${size}`">
                     <button
