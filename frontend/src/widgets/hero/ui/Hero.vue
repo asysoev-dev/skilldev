@@ -36,14 +36,22 @@
         </div>
 
         <div class="hero__photo-wrapper">
-            <img
-                src="/myfoto.jpg"
-                alt="Алексей Сысоев"
-                class="hero__photo"
-                width="350"
-                height="350"
-                decoding="async"
-            />
+            <picture>
+                <source
+                    srcset="/myfoto-350.webp 350w, /myfoto-650.webp 650w"
+                    sizes="(min-width: 1024px) 350px, (min-width: 768px) 280px, 220px"
+                    type="image/webp"
+                />
+                <img
+                    src="/myfoto.jpg"
+                    alt="Алексей Сысоев"
+                    class="hero__photo"
+                    width="350"
+                    height="350"
+                    decoding="async"
+                    fetchpriority="high"
+                />
+            </picture>
         </div>
     </section>
 </template>
@@ -181,6 +189,10 @@ const onGithub = () =>
         height: 350px;
         align-self: flex-start;
         order: 0;
+    }
+
+    picture {
+        display: contents;
     }
 }
 
