@@ -37,12 +37,31 @@
         />
         <meta name="twitter:image" content="https://myskilldev.ru/og-image.png" />
 
-        <!-- Шрифты -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <!-- Шрифты (локальные) -->
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-            rel="stylesheet"
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/inter-v20-cyrillic_latin-regular.woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/inter-v20-cyrillic_latin-600.woff2"
+            crossorigin
+        />
+        <link rel="stylesheet" href="/fonts/fonts.css" />
+
+        <!-- Preload для LCP-картинки -->
+        <link
+            rel="preload"
+            as="image"
+            href="/myfoto-350.webp"
+            type="image/webp"
+            imagesrcset="/myfoto-350.webp 350w, /myfoto-650.webp 650w"
+            imagesizes="(min-width: 1024px) 350px, (min-width: 768px) 280px, 220px"
         />
     </head>
     <body>
