@@ -2,9 +2,11 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const app = express();
 app.use(cookieParser());
+app.use(compression());
 
 const PORT = process.env.SSR_PORT || 3000;
 
@@ -42,14 +44,14 @@ const getCssFiles = () => {
 };
 
 const getClientFile = () => {
-    const distDir = path.resolve(__dirname, 'dist');
-    if (!fs.existsSync(distDir)) return '/client.js';
+    const distDir = path.resolve(__dirname, 'dist/js');
+    if (!fs.existsSync(distDir)) return '/js/client.js';
 
     const files = fs
         .readdirSync(distDir)
         .filter((f) => f.startsWith('client.') && f.endsWith('.js'));
 
-    if (!files.length) return '/client.js';
+    if (!files.length) return '/js/client.js';
 
     files.sort((a, b) => {
         const aTime = fs.statSync(path.join(distDir, a)).mtimeMs;
@@ -57,7 +59,7 @@ const getClientFile = () => {
         return bTime - aTime;
     });
 
-    return `/${files[0]}`;
+    return `/js/${files[0]}`;
 };
 
 const META = {
@@ -66,7 +68,8 @@ const META = {
         description:
             'Frontend-разработчик с 5-летним опытом. Vue 3, TypeScript, SSR, WebSocket, Docker, CI/CD. Портфолио с живыми демо и открытым исходным кодом.',
         ogTitle: 'Алексей Сысоев — Frontend-разработчик',
-        ogDescription: 'Vue 3 + TypeScript. SSR, WebSocket, Docker, CI/CD. Живые демо и открытый код.',
+        ogDescription:
+            'Vue 3 + TypeScript. SSR, WebSocket, Docker, CI/CD. Живые демо и открытый код.',
         locale: 'ru_RU',
     },
     en: {
@@ -74,7 +77,8 @@ const META = {
         description:
             'Frontend developer with 5 years of experience. Vue 3, TypeScript, SSR, WebSocket, Docker, CI/CD. Portfolio with live demos and open source.',
         ogTitle: 'Alexey Sysoev — Frontend Developer',
-        ogDescription: 'Vue 3 + TypeScript. SSR, WebSocket, Docker, CI/CD. Live demos and open source.',
+        ogDescription:
+            'Vue 3 + TypeScript. SSR, WebSocket, Docker, CI/CD. Live demos and open source.',
         locale: 'en_US',
     },
 };
@@ -116,10 +120,13 @@ const template = (html, state, lang = 'ru') => {
         <meta name="twitter:description" content="${meta.ogDescription}">
         <meta name="twitter:image" content="https://myskilldev.ru/og-image.png">
 
-        <!-- Шрифты -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <!-- Шрифты (локальные) -->
+        <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-v20-cyrillic_latin-regular.woff2" crossorigin>
+        <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-v20-cyrillic_latin-600.woff2" crossorigin>
+        <link rel="stylesheet" href="/fonts/fonts.css">
+
+        <!-- Preload для LCP-картинки -->
+        <link rel="preload" as="image" href="/myfoto-350.webp" type="image/webp" imagesrcset="/myfoto-350.webp 350w, /myfoto-650.webp 650w" imagesizes="(min-width: 1024px) 350px, (min-width: 768px) 280px, 220px">
 
         ${cssLinks}
     </head>
@@ -153,10 +160,30 @@ loadRenderer().then(() => {
 
     const cssPath = path.resolve(__dirname, 'dist/css');
     if (fs.existsSync(cssPath)) {
-        app.use('/css', express.static(cssPath));
+        app.use('/css', express.static(cssPath, { maxAge: '1y', immutable: true }));
     }
 
-    app.use(express.static(path.resolve(__dirname, 'dist')));
+    const jsPath = path.resolve(__dirname, 'dist/js');
+    if (fs.existsSync(jsPath)) {
+        app.use('/js', express.static(jsPath, { maxAge: '1y', immutable: true }));
+    }
+
+    const fontsPath = path.resolve(__dirname, 'dist/fonts');
+    if (fs.existsSync(fontsPath)) {
+        app.use('/fonts', express.static(fontsPath, { maxAge: '1y', immutable: true }));
+    }
+
+    app.use(
+        express.static(path.resolve(__dirname, 'dist'), {
+            maxAge: '1d',
+            index: false,
+            setHeaders: (res, filepath) => {
+                if (filepath.endsWith('.html')) {
+                    res.setHeader('Cache-Control', 'no-cache');
+                }
+            },
+        })
+    );
 
     app.use((req, res) => {
         const indexHtml = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf-8');
