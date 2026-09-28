@@ -23,13 +23,18 @@
             </div>
 
             <div class="hero__actions">
-                <Button variant="primary" size="lg" class="hero__tour-btn" @click="onTour">
+                <Button
+                    v-if="canShowTour"
+                    variant="outline"
+                    size="lg"
+                    @click="onTour"
+                >
                     {{ t('hero.cta.tour') }}
                 </Button>
                 <!-- <Button variant="outline-primary-action" size="lg" @click="onDemo">
                     {{ t('hero.cta.demo') }}
                 </Button> -->
-                <Button variant="outline" size="lg" :icon-left="CodeBracketIcon" @click="onGithub">
+                <Button variant="primary" size="lg" :icon-left="CodeBracketIcon" @click="onGithub">
                     {{ t('hero.cta.github') }}
                 </Button>
             </div>
@@ -63,6 +68,11 @@ import { useI18n } from '@shared/lib/useI18n';
 import { useRouter } from 'vue-router';
 import { useTour } from '@shared/lib/useTour';
 import { tourSteps } from '@shared/lib/tourSteps';
+import { useMediaQuery } from '@shared/lib/useMediaQuery';
+import { computed } from 'vue';
+
+const isDesktop = useMediaQuery('(min-width: 768px) and (hover: hover) and (pointer: fine)');
+const canShowTour = computed(() => isDesktop.value);
 
 const router = useRouter();
 const { restart } = useTour();
@@ -97,12 +107,6 @@ const onGithub = () =>
         justify-content: space-between;
         gap: var(--gap-xl);
         padding: 80px 0 100px;
-    }
-}
-
-.hero__tour-btn {
-    @include respond-down(tablet) {
-        display: none;
     }
 }
 
