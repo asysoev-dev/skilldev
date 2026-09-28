@@ -49,6 +49,16 @@ jobs:
           echo "SSR_PORT=${{ secrets.SSR_PORT }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
 
+      - name: Clean old frontend dist on VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            rm -rf /root/skilldev/frontend/dist
+            rm -rf /root/skilldev/frontend/dist-server
+
       - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
