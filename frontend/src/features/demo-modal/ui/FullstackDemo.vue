@@ -1,5 +1,5 @@
 <template>
-    <Modal :open="open" title="Fullstack" subtitle="Node.js, Prisma, PostgreSQL, JWT" size="md" @close="$emit('close')">
+    <Modal :open="open" title="Backend" subtitle="Node.js, Prisma, PostgreSQL, JWT" size="md" @close="$emit('close')">
         <div class="demo">
             <p class="demo__text">
                 Стек: <strong>Node.js</strong>, <strong>Express</strong>, <strong>Prisma</strong>,

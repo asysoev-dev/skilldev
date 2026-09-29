@@ -61,8 +61,8 @@ export const skills: Skill[] = [
         to: '/demo',
     },
     {
-        id: 'fullstack',
-        title: 'Fullstack',
+        id: 'backend',
+        title: 'Backend',
         description: 'Node.js, Express, Prisma, PostgreSQL, JWT',
         icon: ServerStackIcon,
         color: 'var(--text-secondary)',

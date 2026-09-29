@@ -17,7 +17,7 @@
         </div>
 
         <FrontendDemo :open="activeModal === 'frontend'" @close="closeModal" />
-        <FullstackDemo :open="activeModal === 'fullstack'" @close="closeModal" />
+        <FullstackDemo :open="activeModal === 'backend'" @close="closeModal" />
         <DevOpsDemo :open="activeModal === 'devops'" @close="closeModal" />
         <SSRDemo :open="activeModal === 'ssr'" @close="closeModal" />
     </section>
@@ -35,7 +35,7 @@ const { t } = useI18n();
 const router = useRouter();
 const activeModal = ref<string | null>(null);
 
-const MODAL_IDS = ['frontend', 'fullstack', 'devops', 'ssr'];
+const MODAL_IDS = ['frontend', 'backend', 'devops', 'ssr'];
 
 const openModal = (skill: Skill) => {
     if (MODAL_IDS.includes(skill.id)) {
