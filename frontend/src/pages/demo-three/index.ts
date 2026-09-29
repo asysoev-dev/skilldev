@@ -1,0 +1,1 @@
+export { default as DemoThreePage } from './ui/DemoThreePage.vue';

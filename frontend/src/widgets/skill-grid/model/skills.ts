@@ -5,7 +5,7 @@ import {
     CircleStackIcon,
     RocketLaunchIcon,
     BoltIcon,
-    SwatchIcon,
+    CubeTransparentIcon,
     ChartBarIcon,
     TableCellsIcon,
 } from '@heroicons/vue/24/outline';
@@ -25,7 +25,7 @@ export const skills: Skill[] = [
         title: 'Data Table',
         description: 'Поиск, сортировка, фильтры, пагинация, CSV',
         icon: TableCellsIcon,
-        color: 'var(--neon-blue)',
+        color: 'var(--neon-purple)',
         to: '/demo/table',
     },
     {
@@ -33,7 +33,7 @@ export const skills: Skill[] = [
         title: 'Charts',
         description: 'Chart.js, воронка, аналитика, графики',
         icon: ChartBarIcon,
-        color: 'var(--text-secondary)',
+        color: 'var(--neon-green)',
         to: '/demo/charts',
     },
     {
@@ -45,12 +45,12 @@ export const skills: Skill[] = [
         to: '/demo/realtime',
     },
     {
-        id: 'ui-kit',
-        title: 'UI-кит',
-        description: 'Кнопки, инпуты, чекбоксы, свитчи, теги',
-        icon: SwatchIcon,
-        color: 'var(--text-secondary)',
-        to: '/demo/ui',
+        id: 'three',
+        title: 'Three.js',
+        description: 'WebGL-сцена',
+        icon: CubeTransparentIcon,
+        color: 'var(--neon-blue)',
+        to: '/demo/three',
     },
     {
         id: 'frontend',

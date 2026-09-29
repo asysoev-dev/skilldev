@@ -1,34 +1,30 @@
 <template>
-    <Modal :open="open" title="Frontend" subtitle="Vue 3, TypeScript, анимации" size="md" @close="$emit('close')">
+    <Modal :open="open" title="Frontend" subtitle="Vue 3, TypeScript, SCSS" size="md" @close="$emit('close')">
         <div class="demo">
             <p class="demo__text">
-                Стек: <strong>Vue 3</strong>, <strong>TypeScript</strong>, <strong>SCSS</strong>,
-                <strong>Pinia</strong>, <strong>Composition API</strong>.
+                Интерфейс на Vue 3 с Composition API и TypeScript. Состояние в Pinia,
+                стили в SCSS с CSS-переменными под темы. Сборка на Webpack, архитектура FSD:
+                <code>app</code>, <code>pages</code>, <code>features</code>,
+                <code>entities</code>, <code>widgets</code>, <code>shared</code>.
             </p>
 
-            <div class="demo__row">
-                <Button variant="primary">Primary</Button>
-                <Button variant="outline">Outline</Button>
-                <Button variant="primary-action">Save</Button>
-            </div>
-
-            <div class="demo__row">
-                <Input v-model="name" label="Инпут" placeholder="Введите текст..." />
-            </div>
-
-            <div class="demo__row">
-                <Switch v-model="on" label="Свитч" />
-                <Tag variant="neon-blue">Vue 3</Tag>
-                <Tag variant="neon-green">TypeScript</Tag>
-            </div>
-
-            <p class="demo__hint">Всё работает вживую. Кликай, вводи текст, переключай.</p>
+            <RouterLink to="/demo/ui" custom v-slot="{ navigate }">
+                <Button
+                    variant="secondary"
+                    :icon-right="ArrowRightIcon"
+                    @click="navigate(); $emit('close')"
+                >
+                    Посмотреть UI-кит
+                </Button>
+            </RouterLink>
         </div>
     </Modal>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 import { Modal, Button, Input, Switch, Tag } from '@shared/ui';
 
 interface Props {
@@ -57,6 +53,16 @@ const on = ref(false);
     color: var(--text-secondary);
     line-height: 1.6;
     margin: 0;
+
+    code {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        padding: 2px 6px;
+        border-radius: var(--radius-sm);
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color);
+        color: var(--neon-blue);
+    }
 }
 
 .demo__row {
@@ -64,12 +70,5 @@ const on = ref(false);
     flex-wrap: wrap;
     gap: var(--gap-sm);
     align-items: center;
-}
-
-.demo__hint {
-    font-size: var(--font-tiny);
-    color: var(--text-tertiary);
-    margin: 0;
-    text-align: center;
 }
 </style>

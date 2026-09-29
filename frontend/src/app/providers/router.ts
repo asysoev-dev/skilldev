@@ -44,6 +44,11 @@ const routes: RouteRecordRaw[] = [
                 name: 'demo-realtime',
                 component: () => import('@pages/demo-realtime/ui/DemoRealtimePage.vue'),
             },
+            {
+                path: 'demo/three',
+                name: 'demo-three',
+                component: () => import('@pages/demo-three/ui/DemoThreePage.vue'),
+            },
         ],
     },
 ];

@@ -20,7 +20,6 @@
         <FullstackDemo :open="activeModal === 'fullstack'" @close="closeModal" />
         <DevOpsDemo :open="activeModal === 'devops'" @close="closeModal" />
         <SSRDemo :open="activeModal === 'ssr'" @close="closeModal" />
-        <UIKitDemo :open="activeModal === 'ui-kit'" @close="closeModal" />
     </section>
 </template>
 
@@ -29,14 +28,14 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SkillCard from './SkillCard.vue';
 import { skills, type Skill } from '../model/skills';
-import { FrontendDemo, FullstackDemo, DevOpsDemo, SSRDemo, UIKitDemo } from '@features/demo-modal';
+import { FrontendDemo, FullstackDemo, DevOpsDemo, SSRDemo } from '@features/demo-modal';
 import { useI18n } from '@shared/lib/useI18n';
 
 const { t } = useI18n();
 const router = useRouter();
 const activeModal = ref<string | null>(null);
 
-const MODAL_IDS = ['frontend', 'fullstack', 'devops', 'ssr', 'ui-kit'];
+const MODAL_IDS = ['frontend', 'fullstack', 'devops', 'ssr'];
 
 const openModal = (skill: Skill) => {
     if (MODAL_IDS.includes(skill.id)) {
