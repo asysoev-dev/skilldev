@@ -286,7 +286,7 @@ export const tourSteps: TourStep[] = [
         id: 'final',
         target: '.tour__step-4',
         title: 'Это всё!',
-        text: 'Не забудь посмотреть остальные демо',
+        text: 'Не забудь посмотреть остальные демо. Сайт также адаптирован под мобильные устройства',
         position: 'top',
         offsetY: 500,
         before: () => navigate('/'),
