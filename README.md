@@ -1,74 +1,67 @@
 # SkillDev
 
-Проект представляет собой начальную основу полнофункционального приложения на **Vue 3** и **TypeScript** с гибридным рендерингом:
+Сайт-портфолио. Собран как единый проект: SSR на главной, SPA в остальных разделах, живой бэкенд, авторизация, деплой через CI/CD.
 
-- **Главная страница** — SSR
-- **Остальные разделы** — SPA
+Сайт: https://myskilldev.ru
 
-**Архитектура:**
-- Frontend: Vue 3, TypeScript, Pinia, Vue Router, Webpack, FSD
-- Backend: Node.js, Express, JWT, Prisma, PostgreSQL
-- DevOps: Docker, Nginx, GitHub Actions, Let's Encrypt
+## Что внутри
 
-**Ключевые возможности:**
-- Авторизация через JWT + httpOnly cookies
-- Полная контейнеризация (Docker Compose)
-- Автоматический деплой на VPS через GitHub Actions
-- HTTPS (Let's Encrypt)
+Главная страница рендерится на сервере. SSR собственный: Express + Vue, без Nuxt. Остальные разделы работают как обычное SPA на Vue Router. Такой гибрид дает быстрый первый рендер и нормальное SEO для главной, а остальные страницы не грузят сервер без необходимости.
 
-## Установка
+Демо-разделы:
+
+- `/demo/table` таблица на 140 лидов. Поиск, фильтры, сортировка, пагинация, экспорт в CSV.
+- `/demo/charts` четыре графика на Chart.js: динамика, источники, воронка, конверсия менеджеров.
+- `/demo/realtime` WebSocket через socket.io. Счетчик онлайн-пользователей и уведомления между вкладками.
+- `/demo/ui` витрина UI-кита. Кнопки, инпуты, чекбоксы, свитчи, карточки, теги.
+- `/auth` вход и регистрация. JWT с access-токеном в памяти и refresh в httpOnly cookie.
+- `/dashboard` CRUD лидов с валидацией форм, роли admin/user.
+
+Демо-доступ: `demo@skilldev.ru` / `demo123`. Данные вымышленные, можно сбросить кнопкой в дашборде.
+
+## Стек
+
+**Frontend:** Vue 3 (Composition API), TypeScript, Pinia, Vue Router, SCSS, Webpack, VeeValidate + Zod, Chart.js, socket.io-client
+
+**Backend:** Node.js, Express, Prisma, PostgreSQL, JWT, socket.io
+
+**Инфраструктура:** Docker Compose, Nginx, GitHub Actions, Let's Encrypt
+
+**Архитектура:** FSD
+
+## Запуск локально
+
+Нужны Node.js 20+, Docker и PostgreSQL (поднимается через Docker Compose).
 
 ```bash
-# 1. Клонировать репозиторий
+# 1. Клонировать
 git clone https://github.com/asysoev-dev/skilldev.git
 cd skilldev
 
-# 2. Создать файл .env.dev в корне проекта на основе .env.example
+# 2. Скопировать env-файлы
 cp .env.example .env.dev
-
-# 3. Установить зависимости фронта
-cd frontend
-npm install
-
-# 4. Создать файл backend/prisma/.env на основе backend/prisma/.env.example
 cp backend/prisma/.env.example backend/prisma/.env
 
-# 5. Установить зависимости бэка
-cd ../backend
-npm install
+# 3. Установить зависимости
+cd frontend && npm install
+cd ../backend && npm install
 
-# 6. Запустить PostgreSQL в Docker (из корня)
+# 4. Поднять PostgreSQL
 cd ..
 docker compose -f docker-compose.dev.yml up -d
 
-# 7. Сделать миграции
+# 5. Применить миграции и засидить данные
 cd backend
 npx prisma migrate dev
+npm run db:seed
 
-# 8. Запустить бэкенд
+# 6. Запустить бэкенд
 npm run dev
 
-# 9. Запустить фронтенд (в новом терминале)
+# 7. В новом терминале запустить фронтенд
 cd ../frontend
 npm run dev
-```
 
-## Команды
-```bash
-#Frontend
-npm run dev - Запуск SPA
-npm run build- Сборка для SSR (client + server)
-npm run build:client - Сборка клиента
-npm run build:server - Сборка сервера
-npm run ssr - Запуск SSR сервера
-npm run lint - Проверка кода
-npm run format - Форматирование кода
-
-#Backend
-npm run dev - Запуск бэкенда
-npm run build - Сборка бэкенда
-npm run db:migrate - Применить миграции
-npm run db:studio - Открыть Prisma Studio
 ```
 
 ## Деплой
@@ -78,8 +71,6 @@ npm run db:studio - Открыть Prisma Studio
 # Деплой автоматически при пуше в main
 git push origin main
 ```
-## Доступ
-Сайт: https://myskilldev.ru
 
 ## Docker
 ```bash
