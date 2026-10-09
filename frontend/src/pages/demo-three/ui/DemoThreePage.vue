@@ -10,7 +10,7 @@
         </header>
 
         <div class="demo-three__stage">
-            <span>WebGL-сцена находится на стадии разработки</span>
+            <span>WebGL-сцена находится на стадии разработки 🤯</span>
             <span>Скоро она здесь появится</span>
         </div>
     </div>
