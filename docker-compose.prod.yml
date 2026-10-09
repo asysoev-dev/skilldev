@@ -38,8 +38,7 @@ services:
       dockerfile: Dockerfile
     container_name: skilldev-frontend-prod
     ports:
-      - "80:80"
-      - "443:443"
+      - "127.0.0.1:4443:443"
     volumes:
       - /etc/letsencrypt/live/myskilldev.ru/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
       - /etc/letsencrypt/live/myskilldev.ru/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
